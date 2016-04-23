@@ -1,0 +1,17 @@
+@import "../../theme/partials/app";
+
+.main-menu {
+    height: 100%;
+    background-color: black;
+    .main-menu-options {
+        @include flex-container(column, center, center);
+        button {
+            margin: 20px;
+        }
+    }
+    .main-menu-title {
+        text-align: center;
+        color: orange;
+        padding: 10px;
+    }
+}

@@ -1,0 +1,9 @@
+@import "../../theme/partials/app";
+.waiting-room {
+    height: 100%;
+    background-color: black;
+    @include flex-container(column, center, center);
+    p {
+        color: red;
+    }
+}

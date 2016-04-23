@@ -1,0 +1,14 @@
+html, body, .content {
+    height: 100%;
+}
+
+@mixin flex-container($direction, $align, $justify) {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: $direction;
+    flex-direction: $direction;
+    -webkit-align-items: $align;
+    align-items: $align;
+    -webkit-justify-content: $justify;
+    justify-content: $justify;
+}

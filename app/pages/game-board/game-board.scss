@@ -1,0 +1,34 @@
+@import "../../theme/partials/app";
+
+.game-board {
+    height: 100%;
+    background-color: black;
+    @include flex-container(column, center, center);
+    img {
+        width: 14%;
+        padding: 2px;
+    }
+}
+
+.game-board-row {
+    @include flex-container(row, center, center);
+}
+
+.game-board-footer {
+    @include flex-container(column, center, center);
+    flex: 1;
+    width: 100%;
+    .game-board-footer-inner {
+        @include flex-container(row, center, space-between);
+        width: 100%;
+        button {
+            margin: 0 20px;
+        }
+        img {
+            width: 12%;
+        }
+        p {
+            color: red;
+        }
+    }
+}
