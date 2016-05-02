@@ -1,7 +1,8 @@
-import { Page, NavController, Storage, LocalStorage } from 'ionic-angular';
+import { Page, NavController } from 'ionic-angular';
 import { WaitingRoomPage } from '../waiting-room/waiting-room';
 import { GameBoardPage } from '../game-board/game-board';
-import { PlayerRole } from '../services/player-role-enum'
+import { PlayerRole } from '../services/player-role-enum';
+import { OwnPlayer } from '../services/own-player';
 
 @Page({
   templateUrl: 'build/pages/main-menu/main-menu.html',
@@ -9,15 +10,12 @@ import { PlayerRole } from '../services/player-role-enum'
 
 export class MainMenuPage {
 
-  storage: Storage = new Storage(LocalStorage, 'guess');
   roles: typeof PlayerRole = PlayerRole;
 
-  constructor(private nav: NavController) {
-      this.nav = nav;
-  }
+  constructor(private nav: NavController, private ownPlayer: OwnPlayer) {}
 
   startGameTapped(role: PlayerRole) {
-      this.storage.set('ownRole', role);
+      this.ownPlayer.role = role;
       this.nav.push(WaitingRoomPage);
   }
 }
