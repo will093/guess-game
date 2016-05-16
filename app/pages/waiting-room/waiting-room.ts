@@ -1,5 +1,5 @@
 import { Page } from 'ionic-angular';
-import { ConnectionService } from '../services/connection-service';
+import { NetworkingService } from '../services/networking-service';
 
 @Page({
   templateUrl: 'build/pages/waiting-room/waiting-room.html',
@@ -9,8 +9,13 @@ export class WaitingRoomPage {
 
   private statusMessage: string;
 
-  constructor(private connectionService: ConnectionService) {
-  	this.statusMessage = 'Waiting for player 2 to connect';
-  	this.connectionService.initialiseConnection();
+  constructor(private networkingService: NetworkingService) {
+    this.statusMessage = 'Connecting...';
+    this.networkingService.connect().then((successMessage) => {
+        this.statusMessage = successMessage;
+    }, (errorMessage) => {
+        this.statusMessage = errorMessage;
+    });
   }
 }
+

@@ -4,9 +4,9 @@ import {PlayerRole} from './player-role-enum';
 @Injectable()
 export class OwnPlayer {
 
-	role: PlayerRole;
+    public role: PlayerRole = undefined;
 
-	characterId: number;
+    public characterId: number = undefined;
 
-	isPlayerTurn: boolean;
+    public isPlayerTurn: boolean = undefined;
 }
