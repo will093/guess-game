@@ -1,21 +1,27 @@
 import { Injectable } from 'angular2/core';
+import { BluetoothConfig } from './bluetooth-config';
 
 declare var networking: any;
 
 @Injectable()
 export class BluetoothServer {
 
-    private serverSocketId: string = undefined;
-    private clientSocketId: string = undefined;
-
     private isConnected: boolean = false;
-    private onReceive: Function = undefined;
-    private timeout: number = 60000;
 
-    private resolveConnect: Function = undefined;
-    private rejectConnect: Function = undefined;
+    private serverSocketId: string;
+    private clientSocketId: string;
 
-    public connect = (uuid: string, onReceive: Function): Promise < string > => {
+    private onReceive: Function;
+
+    private connectionWaitTimer: number;
+
+    private resolveConnect: Function;
+    private rejectConnect: Function;
+
+    constructor(private config: BluetoothConfig) {}
+
+    public connect = (onReceive: Function): Promise < string > => {
+        console.log('Connecting...');
 
         this.onReceive = onReceive;
 
@@ -23,26 +29,24 @@ export class BluetoothServer {
             this.resolveConnect = resolve;
             this.rejectConnect = reject;
 
-            setTimeout(() => {
-                this.rejectConnect('Timed out waiting for opponent.');
-            }, this.timeout);
+            this.connectionWaitTimer = setTimeout(() => {
+                this.cancelConnect('Timed out waiting for opponent.');
+            }, this.config.connectionWaitTimeout);
         });
 
         networking.bluetooth.requestDiscoverable(() => {
-            networking.bluetooth.listenUsingRfcomm(uuid, (serverSocketId) => {
+            networking.bluetooth.listenUsingRfcomm(this.config.uuid, (serverSocketId) => {
                 console.log('Listening for connections on server socket: ' + serverSocketId);
 
                 this.serverSocketId = serverSocketId;
 
                 networking.bluetooth.onAccept.addListener(this.onAccept);
             }, (errorMessage) => {
-                console.error(errorMessage);
-                this.rejectConnect('Failed to publish bluetooth service.');
+                this.cancelConnect('Failed to publish bluetooth service: ' + errorMessage);
             });
 
         }, () => {
-            console.log('Request to make discoverable denied.');
-            this.rejectConnect('Request to make device discoverable denied.');
+            this.cancelConnect('Request to make discoverable denied.');
         });
 
         return connectPromise;
@@ -50,26 +54,18 @@ export class BluetoothServer {
 
     public closeConnection = (): Promise < any > => {
         return new Promise((resolve, reject) => {
+            console.log('Closing bluetooth connection...');
 
-            if (!this.isConnected) {
-                console.log('Not connected');
-                resolve();
-                return;
-            }
+            networking.bluetooth.onReceive.removeListener(this.onReceive);
+            networking.bluetooth.onAccept.removeListener(this.onAccept);
 
-            console.log('Closing bluetooth connection on socket: ' + this.serverSocketId);
+            window.clearTimeout(this.connectionWaitTimer);
 
             networking.bluetooth.close(this.serverSocketId, () => {
-                console.log('Succesfully unpublished service on socket ' + this.serverSocketId);
-
                 this.isConnected = false;
-
-                networking.bluetooth.onReceive.removeListener(this.onReceive);
-                networking.bluetooth.onAccept.removeListener(this.onAccept);
                 resolve();
             }, (errorMessage) => {
-                console.log('Failed to unpublish service on socket ' + this.serverSocketId + ':');
-                console.log(errorMessage);
+                console.log('Failed to unpublish service on socket ' + this.serverSocketId + ': ' + errorMessage);
                 reject();
             });
         });
@@ -77,22 +73,38 @@ export class BluetoothServer {
     }
 
     private onAccept = (acceptInfo: any): void => {
+
         console.log('Accepted a connection!');
-        console.log(acceptInfo);
 
         if (acceptInfo.socketId !== this.serverSocketId) {
-            console.log('Accepted connection is on the wrong socket, should be socket ' + this.serverSocketId + ', but was socket ' + acceptInfo.socketId);
-            this.rejectConnect('A device attempted to connect on the wrong socket.');
+            this.cancelConnect('Accepted connection is on the wrong socket, should be socket ' + this.serverSocketId + ', but was socket ' + acceptInfo.socketId);
             return;
         }
 
-        // TODO: send some message to client to confirm that connection was made on the right socket.
+        networking.bluetooth.send(acceptInfo.clientSocketId, this.config.confirmationMessageView.buffer, () => {
+            console.log('Confirmation message sent to socket: ' + acceptInfo.clientSocketId);
+        }, (errorMessage) => {
+            this.cancelConnect('Failed to send confirmation message: ' + errorMessage);
+        });
 
         this.clientSocketId = acceptInfo.clientSocketId;
-        this.isConnected = true;
+
         networking.bluetooth.onAccept.removeListener(this.onAccept);
+        window.clearTimeout(this.connectionWaitTimer);
+
         networking.bluetooth.onReceive.addListener(this.onReceive);
+
+        this.isConnected = true;
         this.resolveConnect(this.clientSocketId);
     }
+
+    private cancelConnect = (reason: string) => {
+        console.log(reason);
+        this.closeConnection().then(() => {
+            this.rejectConnect(reason);
+        }, () => {
+            this.rejectConnect(reason);
+        });
+    };
 }
 

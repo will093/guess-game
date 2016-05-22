@@ -9,23 +9,22 @@ declare var networking: any;
 @Injectable()
 export class NetworkingService {
 
-    private opponentSocketId: string = undefined;
-    private uuid: string = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
-    private successMessage = 'Successfully connected!';
+    private opponentSocketId: string;
+    private successMessage: string = 'Successfully connected!';
 
     constructor(private ownPlayer: OwnPlayer, private bluetoothServer: BluetoothServer, private bluetoothClient: BluetoothClient) {}
 
-    public connect = (): Promise<string> => {
+    public connect = (): Promise < string > => {
         return new Promise((resolve, reject) => {
             if (this.ownPlayer.role === PlayerRole.Host) {
-                this.bluetoothServer.connect(this.uuid, this.onReceive).then((clientSocketId) => {
+                this.bluetoothServer.connect(this.onReceive).then((clientSocketId) => {
                     this.opponentSocketId = clientSocketId;
                     resolve(this.successMessage);
                 }, (errorMessage) => {
                     reject(errorMessage);
                 });
             } else {
-                this.bluetoothClient.connect(this.uuid, this.onReceive).then((serverSocketId) => {
+                this.bluetoothClient.connect(this.onReceive).then((serverSocketId) => {
                     this.opponentSocketId = serverSocketId;
                     resolve(this.successMessage);
                 }, (errorMessage) => {
@@ -37,23 +36,26 @@ export class NetworkingService {
         });
     }
 
+    public closeConnection = (): Promise < any > => {
+        networking.bluetooth.onReceiveError.removeListener(this.onReceiveError);
+        this.opponentSocketId = undefined;
+
+        if (this.ownPlayer.role === PlayerRole.Host) {
+            return this.bluetoothServer.closeConnection();
+        } else {
+            return this.bluetoothClient.closeConnection();
+        }
+    }
+
     public send = (arrayBuffer: ArrayBuffer): void => {
+        console.log('Sending data:');
+        console.log(arrayBuffer);
+
         networking.bluetooth.send(this.opponentSocketId, arrayBuffer, (bytesSent) => {
             console.log('Sent ' + bytesSent + ' bytes');
         }, (errorMessage) => {
             console.log('Send failed: ' + errorMessage);
         });
-    }
-
-    public closeConnection = (): void => {
-        if (this.ownPlayer.role === PlayerRole.Host) {
-            this.bluetoothServer.closeConnection();
-        } else {
-            this.bluetoothClient.closeConnection();
-        }
-
-        networking.bluetooth.onReceiveError.removeListener(this.onReceiveError);
-        this.opponentSocketId = undefined;
     }
 
     private onReceive = (receiveInfo: any): void => {
