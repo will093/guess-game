@@ -1,8 +1,8 @@
-import {Injectable} from 'angular2/core';
-
 export class Character {
 
-	characterId: number;
+    public characterId: string;
 
-	imageUrl: string;
+    public imagePath: string;
+
+    public name: string;
 }

@@ -1,21 +1,23 @@
-import { Page } from 'ionic-angular';
+import { Page, NavController } from 'ionic-angular';
 import { NetworkingService } from '../services/networking-service';
+import { GameBoardPage } from '../game-board/game-board';
 
 @Page({
-  templateUrl: 'build/pages/waiting-room/waiting-room.html',
+    templateUrl: 'build/pages/waiting-room/waiting-room.html',
 })
 
 export class WaitingRoomPage {
 
-  private statusMessage: string;
+    private statusMessage: string;
 
-  constructor(private networkingService: NetworkingService) {
-    this.statusMessage = 'Connecting...';
-    this.networkingService.connect().then((successMessage) => {
-        this.statusMessage = successMessage;
-    }, (errorMessage) => {
-        this.statusMessage = errorMessage;
-    });
-  }
+    constructor(private nav: NavController, private networkingService: NetworkingService) {
+        this.statusMessage = 'Connecting...';
+        this.networkingService.connect().then((successMessage) => {
+            this.statusMessage = successMessage;
+            this.nav.push(GameBoardPage);
+        }, (errorMessage) => {
+            this.statusMessage = errorMessage;
+        });
+    }
 }
 

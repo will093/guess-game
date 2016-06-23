@@ -1,9 +1,10 @@
-import {Injectable} from 'angular2/core';
-import {MessageType} from './message-type-enum.ts'
+import { Injectable } from 'angular2/core';
+import { MessageType } from './message-type-enum.ts';
 
+@Injectable
 export class Message {
 
-	messageType: MessageType;
+    public messageType: MessageType;
 
-	data: any;
+    public data: any;
 }

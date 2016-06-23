@@ -3,16 +3,23 @@ import { PlayerRole } from './player-role-enum';
 import { OwnPlayer } from './own-player';
 import { BluetoothServer } from './bluetooth-server';
 import { BluetoothClient } from './bluetooth-client';
+import { TextEncoder, TextDecoder } from 'text-encoding';
 
 declare var networking: any;
 
+// TODO can this be BluetoothNetworkingService and then NetworkingService will be a Typescript interface?
 @Injectable()
 export class NetworkingService {
 
     private opponentSocketId: string;
     private successMessage: string = 'Successfully connected!';
+    private encoder: TextEncoder;
+    private decoder: TextDecoder;
 
-    constructor(private ownPlayer: OwnPlayer, private bluetoothServer: BluetoothServer, private bluetoothClient: BluetoothClient) {}
+    constructor(private ownPlayer: OwnPlayer, private bluetoothServer: BluetoothServer, private bluetoothClient: BluetoothClient) {
+        this.encoder = new TextEncoder('utf-8');
+        this.decoder = new TextDecoder('utf-8');
+    }
 
     public connect = (): Promise < string > => {
         return new Promise((resolve, reject) => {
@@ -47,17 +54,21 @@ export class NetworkingService {
         }
     }
 
-    public send = (arrayBuffer: ArrayBuffer): void => {
-        console.log('Sending data:');
-        console.log(arrayBuffer);
+    public send = (serialisable: Object): void => {
+        let stringified = JSON.stringify(serialisable);
+        let buffer = new TextEncoder().encode(stringified).buffer;
 
-        networking.bluetooth.send(this.opponentSocketId, arrayBuffer, (bytesSent) => {
+        console.log('Sending data:');
+        console.log(buffer);
+
+        networking.bluetooth.send(this.opponentSocketId, buffer, (bytesSent) => {
             console.log('Sent ' + bytesSent + ' bytes');
         }, (errorMessage) => {
             console.log('Send failed: ' + errorMessage);
         });
     }
 
+    // TODO - make public and call subscribed functions with deserialised received object.
     private onReceive = (receiveInfo: any): void => {
         console.log('Data recieved:');
         console.log(receiveInfo);
@@ -68,6 +79,7 @@ export class NetworkingService {
         }
     }
 
+    // TODO - make public and call subscribed functions with deserialised received error.
     private onReceiveError = (errorInfo: any): void => {
         console.log('A data receive error occured: ');
         console.log(errorInfo);

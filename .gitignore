@@ -9,4 +9,5 @@ plugins/
 .DS_Store
 Thumbs.db
 runPhone.sh
+runNewPhone.sh
 runTablet.sh

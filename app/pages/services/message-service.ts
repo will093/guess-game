@@ -1,10 +1,18 @@
-import {Injectable} from 'angular2/core';
-import {Message} from './message';
+import { Injectable } from 'angular2/core';
+import { Message } from './message';
 
 @Injectable()
 export class MessageService {
 
-	sendMessage(message: Message) {}
+    public startGame = (): void => {}
 
-	closeConnection() {}
+    public endTurn = (): void => {}
+
+    public endGame = (): void => {}
+
+    public onStartGame = (): void => {}
+
+    public onEndTurn = (): void => {}
+
+    public onEndGame = (): void => {}
 }

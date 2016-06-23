@@ -1,6 +1,5 @@
 export enum MessageType {
-	SetCharacter = 1,
-	EndTurn = 2,
-	Guess = 3,
-	GuessResult = 4,
+    StartGame = 1,
+    EndTurn = 2,
+    EndGame = 3,
 }

@@ -1,12 +1,10 @@
-import {Injectable} from 'angular2/core';
-import {PlayerRole} from './player-role-enum';
+import { Injectable } from 'angular2/core';
+import { PlayerRole } from './player-role-enum';
 
 @Injectable()
 export class OwnPlayer {
 
-    public role: PlayerRole = undefined;
+    public role: PlayerRole;
 
-    public characterId: number = undefined;
-
-    public isPlayerTurn: boolean = undefined;
+    public characterId: number;
 }
