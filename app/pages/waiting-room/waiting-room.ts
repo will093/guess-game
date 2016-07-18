@@ -1,5 +1,5 @@
 import { Page, NavController } from 'ionic-angular';
-import { NetworkingService } from '../services/networking-service';
+import { BluetoothNetworkingService } from '../services/bluetooth/bluetooth-networking-service';
 import { GameBoardPage } from '../game-board/game-board';
 
 @Page({
@@ -10,7 +10,7 @@ export class WaitingRoomPage {
 
     private statusMessage: string;
 
-    constructor(private nav: NavController, private networkingService: NetworkingService) {
+    constructor(private nav: NavController, private networkingService: BluetoothNetworkingService) {
         this.statusMessage = 'Connecting...';
         this.networkingService.connect().then((successMessage) => {
             this.statusMessage = successMessage;

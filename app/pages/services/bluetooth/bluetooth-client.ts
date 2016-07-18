@@ -62,6 +62,11 @@ export class BluetoothClient {
             window.clearTimeout(this.discoveryTimer);
             window.clearTimeout(this.confirmationTimer);
 
+            if (!this.serverSocketId) {
+                this.isConnected = false;
+                resolve();
+            }
+
             networking.bluetooth.close(this.serverSocketId, () => {
                 this.isConnected = false;
                 resolve();

@@ -1,15 +1,16 @@
 import { Injectable } from 'angular2/core';
-import { PlayerRole } from './player-role-enum';
-import { OwnPlayer } from './own-player';
+import { PlayerRole, OwnPlayer } from '../player';
 import { BluetoothServer } from './bluetooth-server';
 import { BluetoothClient } from './bluetooth-client';
 import { TextEncoder, TextDecoder } from 'text-encoding';
+import { IEvent, Event} from '../event';
 
 declare var networking: any;
 
-// TODO can this be BluetoothNetworkingService and then NetworkingService will be a Typescript interface?
+// Provides a simple interface for connecting 2 devices via bluetooth, using 
+// the following Cordova plugin: https://www.npmjs.com/package/cordova-plugin-networking-bluetooth
 @Injectable()
-export class NetworkingService {
+export class BluetoothNetworkingService {
 
     private opponentSocketId: string;
     private successMessage: string = 'Successfully connected!';
@@ -21,6 +22,8 @@ export class NetworkingService {
         this.decoder = new TextDecoder('utf-8');
     }
 
+    // TODO: bluetooth networking should not know about game logic, players etc...
+    // Connect to the other device.
     public connect = (): Promise < string > => {
         return new Promise((resolve, reject) => {
             if (this.ownPlayer.role === PlayerRole.Host) {
@@ -43,6 +46,7 @@ export class NetworkingService {
         });
     }
 
+    // Close any open connection to the other device.
     public closeConnection = (): Promise < any > => {
         networking.bluetooth.onReceiveError.removeListener(this.onReceiveError);
         this.opponentSocketId = undefined;
@@ -54,6 +58,7 @@ export class NetworkingService {
         }
     }
 
+    // Send data to the other device.
     public send = (serialisable: Object): void => {
         let stringified = JSON.stringify(serialisable);
         let buffer = new TextEncoder().encode(stringified).buffer;
@@ -68,7 +73,12 @@ export class NetworkingService {
         });
     }
 
-    // TODO - make public and call subscribed functions with deserialised received object.
+    // Event which is triggered whenever data is received on the correct socket.
+    public onDataReceived: IEvent<Object> = new Event<Object>();
+
+    // Event which is triggered whenever there is an error receiving data.
+    public onDataReceivedError: IEvent<any> = new Event<any>();
+
     private onReceive = (receiveInfo: any): void => {
         console.log('Data recieved:');
         console.log(receiveInfo);
@@ -77,12 +87,21 @@ export class NetworkingService {
             console.log('Received data is on the wrong socket, should be socket ' + this.opponentSocketId + ', but was socket ' + receiveInfo.socketId);
             return;
         }
+
+        let receivedDataEncoded = new Uint8Array(receiveInfo.data);
+        let receivedDataJson = new TextDecoder().decode(receivedDataEncoded.buffer);
+        let receivedData = JSON.parse(receivedDataJson);
+
+        console.log('Decoded received data:');
+        console.log(receivedData);
+        this.onDataReceived.trigger(receivedData);
     }
 
-    // TODO - make public and call subscribed functions with deserialised received error.
     private onReceiveError = (errorInfo: any): void => {
         console.log('A data receive error occured: ');
         console.log(errorInfo);
+
+        this.onDataReceivedError.trigger(errorInfo);
     }
 }
 

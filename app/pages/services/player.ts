@@ -1,10 +1,29 @@
 import { Injectable } from 'angular2/core';
-import { PlayerRole } from './player-role-enum';
 
-@Injectable
-export class Player {
+export interface IPlayer {
+
+    role: PlayerRole;
+
+    characterId: string;
+}
+
+@Injectable()
+export class OpponentPlayer implements IPlayer {
 
     public role: PlayerRole;
 
-    public characterId: number;
+    public characterId: string;
+}
+
+@Injectable()
+export class OwnPlayer implements IPlayer {
+
+    public role: PlayerRole;
+
+    public characterId: string;
+}
+
+export enum PlayerRole {
+    Host = 1,
+    Opponent
 }

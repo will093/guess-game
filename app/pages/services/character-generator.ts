@@ -1,6 +1,8 @@
 import { Injectable } from 'angular2/core';
 import { Character } from './character';
 
+// TODO: this should implement an interface. Can we then inject it with the type of the interface?
+// Service for generating character sets.
 @Injectable()
 export class CharacterGenerator {
 
