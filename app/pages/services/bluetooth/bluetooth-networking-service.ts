@@ -1,5 +1,4 @@
 import { Injectable } from 'angular2/core';
-import { PlayerRole, OwnPlayer } from '../player';
 import { BluetoothServer } from './bluetooth-server';
 import { BluetoothClient } from './bluetooth-client';
 import { TextEncoder, TextDecoder } from 'text-encoding';
@@ -17,45 +16,51 @@ export class BluetoothNetworkingService {
     private encoder: TextEncoder;
     private decoder: TextDecoder;
 
-    constructor(private ownPlayer: OwnPlayer, private bluetoothServer: BluetoothServer, private bluetoothClient: BluetoothClient) {
+    constructor(private bluetoothServer: BluetoothServer, private bluetoothClient: BluetoothClient) {
         this.encoder = new TextEncoder('utf-8');
         this.decoder = new TextDecoder('utf-8');
     }
 
-    // TODO: bluetooth networking should not know about game logic, players etc...
-    // Connect to the other device.
-    public connect = (): Promise < string > => {
+    // Set up a the device as a server, which a client can connect to.
+    public connectAsServer = (): Promise < string > => {
         return new Promise((resolve, reject) => {
-            if (this.ownPlayer.role === PlayerRole.Host) {
-                this.bluetoothServer.connect(this.onReceive).then((clientSocketId) => {
-                    this.opponentSocketId = clientSocketId;
-                    resolve(this.successMessage);
-                }, (errorMessage) => {
-                    reject(errorMessage);
-                });
-            } else {
-                this.bluetoothClient.connect(this.onReceive).then((serverSocketId) => {
-                    this.opponentSocketId = serverSocketId;
-                    resolve(this.successMessage);
-                }, (errorMessage) => {
-                    reject(errorMessage);
-                });
-            }
+            this.bluetoothServer.connect(this.onReceive).then((clientSocketId) => {
+                this.opponentSocketId = clientSocketId;
+                resolve(this.successMessage);
+            }, (errorMessage) => {
+                reject(errorMessage);
+            });          
 
             networking.bluetooth.onReceiveError.addListener(this.onReceiveError);
         });
     }
 
-    // Close any open connection to the other device.
-    public closeConnection = (): Promise < any > => {
+    // Connect to the other device as a client.
+    public connectAsClient = (): Promise < string > => {
+        return new Promise((resolve, reject) => {
+            this.bluetoothClient.connect(this.onReceive).then((serverSocketId) => {
+                this.opponentSocketId = serverSocketId;
+                resolve(this.successMessage);
+            }, (errorMessage) => {
+                reject(errorMessage);
+            });
+
+            networking.bluetooth.onReceiveError.addListener(this.onReceiveError);
+        });
+    }
+
+    // Close any open server connection to the other device.
+    public closeConnectionAsServer = (): Promise < any > => {
         networking.bluetooth.onReceiveError.removeListener(this.onReceiveError);
         this.opponentSocketId = undefined;
+        return this.bluetoothServer.closeConnection();
+    }
 
-        if (this.ownPlayer.role === PlayerRole.Host) {
-            return this.bluetoothServer.closeConnection();
-        } else {
-            return this.bluetoothClient.closeConnection();
-        }
+        // Close any open client connection to the other device.
+    public closeConnectionAsClient = (): Promise < any > => {
+        networking.bluetooth.onReceiveError.removeListener(this.onReceiveError);
+        this.opponentSocketId = undefined;
+        return this.bluetoothClient.closeConnection();
     }
 
     // Send data to the other device.

@@ -1,5 +1,5 @@
 import { Page, NavController } from 'ionic-angular';
-import { BluetoothNetworkingService } from '../services/bluetooth/bluetooth-networking-service';
+import { BluetoothNetworkingHelper } from '../services/bluetooth-networking-helper';
 import { GameBoardPage } from '../game-board/game-board';
 
 @Page({
@@ -10,9 +10,11 @@ export class WaitingRoomPage {
 
     private statusMessage: string;
 
-    constructor(private nav: NavController, private networkingService: BluetoothNetworkingService) {
+    // TODO - should this go in the constructor or somewhere else?
+    constructor(private nav: NavController, private networkingHelper: BluetoothNetworkingHelper) {
         this.statusMessage = 'Connecting...';
-        this.networkingService.connect().then((successMessage) => {
+
+        this.networkingHelper.connect().then((successMessage) => {
             this.statusMessage = successMessage;
             this.nav.push(GameBoardPage);
         }, (errorMessage) => {

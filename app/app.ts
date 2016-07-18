@@ -9,11 +9,13 @@ import { BluetoothConfig } from './pages/services/bluetooth/bluetooth-config';
 import { CharacterGenerator } from './pages/services/character-generator';
 import { Game } from './pages/services/game';
 import { MessageService } from './pages/services/message-service';
+import { BluetoothNetworkingHelper } from './pages/services/bluetooth-networking-helper';
 
 @App({
     template: '<ion-nav [root]="rootPage"></ion-nav>',
     config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
-    providers: [OwnPlayer, OpponentPlayer, Game, MessageService, BluetoothNetworkingService, BluetoothClient, BluetoothServer, BluetoothConfig, CharacterGenerator],
+    providers: [OwnPlayer, OpponentPlayer, Game, MessageService, BluetoothNetworkingService, BluetoothClient, BluetoothServer, BluetoothConfig,
+        CharacterGenerator, BluetoothNetworkingHelper],
 })
 export class MyApp {
     rootPage: any = MainMenuPage;

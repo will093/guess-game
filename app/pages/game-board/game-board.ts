@@ -11,6 +11,6 @@ export class GameBoardPage {
 
     onPageWillEnter(): void {
         this.game.startNewGame();
-    }
+    }    
 }
 
