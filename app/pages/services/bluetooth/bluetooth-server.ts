@@ -34,22 +34,33 @@ export class BluetoothServer {
             }, this.config.connectionWaitTimeout);
         });
 
-        networking.bluetooth.requestDiscoverable(() => {
-            networking.bluetooth.listenUsingRfcomm(this.config.uuid, (serverSocketId) => {
-                console.log('Listening for connections on server socket: ' + serverSocketId);
-
-                this.serverSocketId = serverSocketId;
-
-                networking.bluetooth.onAccept.addListener(this.onAccept);
-            }, (errorMessage) => {
-                this.cancelConnect('Failed to publish bluetooth service: ' + errorMessage);
-            });
-
-        }, () => {
-            this.cancelConnect('Request to make discoverable denied.');
+        networking.bluetooth.getAdapterState((adapterInfo) => {
+            if (adapterInfo.discoverable) {
+                this.listenForConnections();
+            } else {
+                networking.bluetooth.requestDiscoverable(() => {
+                    this.listenForConnections();
+                }, () => {
+                    this.cancelConnect('Request to make discoverable denied.');
+                });
+            }
+        }, (errorMessage) => {
+            this.cancelConnect(errorMessage);
         });
 
         return connectPromise;
+    }
+
+    private listenForConnections = (): Promise < any > => {
+        return networking.bluetooth.listenUsingRfcomm(this.config.uuid, (serverSocketId) => {
+            console.log('Listening for connections on server socket: ' + serverSocketId);
+
+            this.serverSocketId = serverSocketId;
+
+            networking.bluetooth.onAccept.addListener(this.onAccept);
+        }, (errorMessage) => {
+            this.cancelConnect('Failed to publish bluetooth service: ' + errorMessage);
+        });
     }
 
     public closeConnection = (): Promise < any > => {

@@ -1,13 +1,17 @@
 import { Injectable } from 'angular2/core';
 import { BluetoothServer } from './bluetooth-server';
 import { BluetoothClient } from './bluetooth-client';
+import { BluetoothConfig } from './bluetooth-config';
 import { TextEncoder, TextDecoder } from 'text-encoding';
-import { IEvent, Event} from '../event';
+import { IEvent, Event } from '../event';
 
 declare var networking: any;
 
 // Provides a simple interface for connecting 2 devices via bluetooth, using 
 // the following Cordova plugin: https://www.npmjs.com/package/cordova-plugin-networking-bluetooth
+//
+// TODO: tidy up error logging, including using sprintf for string formatting.
+//
 @Injectable()
 export class BluetoothNetworkingService {
 
@@ -16,36 +20,47 @@ export class BluetoothNetworkingService {
     private encoder: TextEncoder;
     private decoder: TextDecoder;
 
-    constructor(private bluetoothServer: BluetoothServer, private bluetoothClient: BluetoothClient) {
+    constructor(private bluetoothServer: BluetoothServer, private bluetoothClient: BluetoothClient, private bluetoothConfig: BluetoothConfig) {
         this.encoder = new TextEncoder('utf-8');
         this.decoder = new TextDecoder('utf-8');
     }
 
     // Set up a the device as a server, which a client can connect to.
     public connectAsServer = (): Promise < string > => {
-        return new Promise((resolve, reject) => {
-            this.bluetoothServer.connect(this.onReceive).then((clientSocketId) => {
-                this.opponentSocketId = clientSocketId;
-                resolve(this.successMessage);
-            }, (errorMessage) => {
-                reject(errorMessage);
-            });          
-
-            networking.bluetooth.onReceiveError.addListener(this.onReceiveError);
-        });
+        return this.connect(this.bluetoothServer.connect, 1);
     }
 
     // Connect to the other device as a client.
     public connectAsClient = (): Promise < string > => {
-        return new Promise((resolve, reject) => {
-            this.bluetoothClient.connect(this.onReceive).then((serverSocketId) => {
-                this.opponentSocketId = serverSocketId;
-                resolve(this.successMessage);
-            }, (errorMessage) => {
-                reject(errorMessage);
-            });
+        return this.connect(this.bluetoothClient.connect, this.bluetoothConfig.maxConnectionAttempts);
+    }
 
+    private connect = (connect: (onReceive: Function) => Promise < string >, attempts: number): Promise < string > => {
+
+        let connectPromise = new Promise < string > ((resolve, reject) => {
+            let i = 1;
+
+            let attemptConnect = (): void => {
+                console.log('Attempting to connect - attempt ' + i + ' of ' + attempts);
+
+                connect(this.onReceive).then((opponentSocketId) => {
+                    this.opponentSocketId = opponentSocketId;
+                    resolve(this.successMessage);
+                }, (errorMessage) => {
+                    if (i < attempts) {
+                        i++;
+                        attemptConnect();
+                        return;
+                    }
+                    reject(errorMessage);
+                });
+            };
+            attemptConnect();
+        });
+
+        return connectPromise.then((successMessage) => {
             networking.bluetooth.onReceiveError.addListener(this.onReceiveError);
+            return successMessage;
         });
     }
 
@@ -56,7 +71,7 @@ export class BluetoothNetworkingService {
         return this.bluetoothServer.closeConnection();
     }
 
-        // Close any open client connection to the other device.
+    // Close any open client connection to the other device.
     public closeConnectionAsClient = (): Promise < any > => {
         networking.bluetooth.onReceiveError.removeListener(this.onReceiveError);
         this.opponentSocketId = undefined;
@@ -79,10 +94,10 @@ export class BluetoothNetworkingService {
     }
 
     // Event which is triggered whenever data is received on the correct socket.
-    public onDataReceived: IEvent<Object> = new Event<Object>();
+    public onDataReceived: IEvent < Object > = new Event < Object > ();
 
     // Event which is triggered whenever there is an error receiving data.
-    public onDataReceivedError: IEvent<any> = new Event<any>();
+    public onDataReceivedError: IEvent < any > = new Event < any > ();
 
     private onReceive = (receiveInfo: any): void => {
         console.log('Data recieved:');
