@@ -1,8 +1,8 @@
-import { Injectable } from 'angular2/core';
+import { Injectable } from '@angular/core';
 import { BluetoothServer } from './bluetooth-server';
 import { BluetoothClient } from './bluetooth-client';
 import { BluetoothConfig } from './bluetooth-config';
-import { TextEncoder, TextDecoder } from 'text-encoding';
+import * as encoding from 'text-encoding';
 import { IEvent, Event } from '../event';
 
 declare var networking: any;
@@ -17,13 +17,8 @@ export class BluetoothNetworkingService {
 
     private opponentSocketId: string;
     private successMessage: string = 'Successfully connected!';
-    private encoder: TextEncoder;
-    private decoder: TextDecoder;
 
-    constructor(private bluetoothServer: BluetoothServer, private bluetoothClient: BluetoothClient, private bluetoothConfig: BluetoothConfig) {
-        this.encoder = new TextEncoder('utf-8');
-        this.decoder = new TextDecoder('utf-8');
-    }
+    constructor(private bluetoothServer: BluetoothServer, private bluetoothClient: BluetoothClient, private bluetoothConfig: BluetoothConfig) {}
 
     // Set up a the device as a server, which a client can connect to.
     public connectAsServer = (): Promise < string > => {
@@ -81,7 +76,7 @@ export class BluetoothNetworkingService {
     // Send data to the other device.
     public send = (serialisable: Object): void => {
         let stringified = JSON.stringify(serialisable);
-        let buffer = new TextEncoder().encode(stringified).buffer;
+        let buffer = new encoding.TextEncoder().encode(stringified).buffer;
 
         console.log('Sending data:');
         console.log(buffer);
@@ -109,7 +104,7 @@ export class BluetoothNetworkingService {
         }
 
         let receivedDataEncoded = new Uint8Array(receiveInfo.data);
-        let receivedDataJson = new TextDecoder().decode(receivedDataEncoded.buffer);
+        let receivedDataJson = new encoding.TextDecoder().decode(receivedDataEncoded);
         let receivedData = JSON.parse(receivedDataJson);
 
         console.log('Decoded received data:');

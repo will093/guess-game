@@ -1,4 +1,5 @@
-import { App, Platform } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { Platform, ionicBootstrap } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
 import { MainMenuPage } from './pages/main-menu/main-menu';
 import { OwnPlayer, OpponentPlayer } from './pages/services/player';
@@ -11,9 +12,8 @@ import { Game } from './pages/services/game';
 import { MessageService } from './pages/services/message-service';
 import { BluetoothNetworkingHelper } from './pages/services/bluetooth-networking-helper';
 
-@App({
+@Component({
     template: '<ion-nav [root]="rootPage"></ion-nav>',
-    config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
     providers: [OwnPlayer, OpponentPlayer, Game, MessageService, BluetoothNetworkingService, BluetoothClient, BluetoothServer, BluetoothConfig,
         CharacterGenerator, BluetoothNetworkingHelper],
 })
@@ -28,4 +28,6 @@ export class MyApp {
         });
     }
 }
+
+ionicBootstrap(MyApp);
 

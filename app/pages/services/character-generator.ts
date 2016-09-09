@@ -1,4 +1,4 @@
-import { Injectable } from 'angular2/core';
+import { Injectable } from '@angular/core';
 import { Character } from './character';
 
 // TODO: this should implement an interface. Can we then inject it with the type of the interface?

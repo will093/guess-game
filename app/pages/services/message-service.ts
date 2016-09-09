@@ -1,4 +1,4 @@
-import { Injectable } from 'angular2/core';
+import { Injectable } from '@angular/core';
 import { IEvent, Event} from './event';
 import { BluetoothNetworkingService } from './bluetooth/bluetooth-networking-service';
 import { IMessage, MessageType, StartGameMessage, EndGameMessage } from './message';

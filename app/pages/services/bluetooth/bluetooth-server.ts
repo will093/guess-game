@@ -1,4 +1,4 @@
-import { Injectable } from 'angular2/core';
+import { Injectable } from '@angular/core';
 import { BluetoothConfig } from './bluetooth-config';
 
 declare var networking: any;
@@ -13,7 +13,7 @@ export class BluetoothServer {
 
     private onReceive: Function;
 
-    private connectionWaitTimer: number;
+    private connectionWaitTimer: any;
 
     private resolveConnect: Function;
     private rejectConnect: Function;

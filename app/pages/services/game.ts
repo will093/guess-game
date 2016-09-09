@@ -1,4 +1,4 @@
-import { Injectable } from 'angular2/core';
+import { Injectable } from '@angular/core';
 import { Character } from './character';
 import { CharacterGenerator } from './character-generator';
 import { MessageService } from './message-service';

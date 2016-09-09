@@ -1,4 +1,4 @@
-import { Injectable } from 'angular2/core';
+import { Injectable } from '@angular/core';
 import { Character } from './character';
 import { OwnPlayer, PlayerRole } from './player';
 import { BluetoothNetworkingService } from './bluetooth/bluetooth-networking-service';

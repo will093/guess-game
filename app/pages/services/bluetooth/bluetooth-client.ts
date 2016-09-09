@@ -1,4 +1,4 @@
-import { Injectable } from 'angular2/core';
+import { Injectable } from '@angular/core';
 import { BluetoothConfig } from './bluetooth-config';
 import * as _ from 'lodash';
 
@@ -13,8 +13,8 @@ export class BluetoothClient {
 
     private onReceive: Function;
 
-    private discoveryTimer: number;
-    private confirmationTimer: number;
+    private discoveryTimer: any;
+    private confirmationTimer: any;
 
     private resolveConnect: Function;
     private rejectConnect: Function;
