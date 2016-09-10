@@ -27,7 +27,7 @@ export class MessageService {
         this.networkingService.send(message);
     }
 
-    // Inform the other device to inform it that the current player's turn has ended.
+    // Inform the other device that the current player's turn has ended.
     public endTurn = (): void => {
         var message: IMessage = {
             messageType: MessageType.EndTurn,
