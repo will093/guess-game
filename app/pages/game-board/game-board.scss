@@ -32,3 +32,17 @@
         }
     }
 }
+
+.game-board-loading {
+    p {
+        color: red;
+    }
+}
+
+.game-board-character-selected {
+    border:2px solid #ff0000;
+}
+
+.game-board-character-eliminated {
+    opacity: 0.1;
+}

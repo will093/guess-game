@@ -5,4 +5,8 @@ export class Character {
     public imagePath: string;
 
     public name: string;
+
+    public isSelected: Boolean;
+
+    public isEliminated: Boolean;
 }
