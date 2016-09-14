@@ -8,7 +8,6 @@ import * as _ from 'lodash';
 @Page({
     templateUrl: 'build/pages/game-board/game-board.html',
 })
-
 export class GameBoardPage {
 
     public gameLoading: Boolean = true;
@@ -43,11 +42,23 @@ export class GameBoardPage {
     }
 
     public endTurn = (): void => {
-        if (!this.game.isOwnTurn) {
+        if (!this.game.isOwnTurn || this.game.gameOver) {
             return;
         }
 
         this.game.endTurn();
+    }
+
+    public guessSelectedCharacter = (): void => {
+        if (!this.game.isOwnTurn || this.game.gameOver) {
+            return;
+        }
+
+        let selectedCharacters = _.filter(this.game.characters, function(character) { return character.isSelected; });
+
+        if (selectedCharacters.length === 1) {
+            this.game.guessCharacter(selectedCharacters[0].characterId);
+        }
     }
 }
 

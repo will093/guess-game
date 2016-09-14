@@ -11,13 +11,17 @@
     <div class="game-board-row">
         <img *ngFor="#character of characterRow3" [ngClass]="{'game-board-character-selected': character.isSelected, 'game-board-character-eliminated': character.isEliminated }" src={{character.imagePath}} (click)="characterTapped(character)">
     </div>
-    <div class="game-board-footer">
+    <div *ngIf="!game.gameOver" class="game-board-footer">
         <div class="game-board-footer-inner">
             <button class="button button-positive" (click)="endTurn()">End Turn</button>
             <img src={{ownCharacter.imagePath}}>
             <p *ngIf="game.isOwnTurn">Your turn</p>
             <p *ngIf="!game.isOwnTurn">Opponent's turn</p>
-            <button class="button button-assertive">Guess!</button>
+            <button class="button button-assertive" (click)="guessSelectedCharacter()">Guess!</button>
         </div>
+    </div>
+    <div *ngIf="game.gameOver" class="game-over-footer">
+        <div *ngIf="game.gameOverVictory"><p>You win!!!</p></div>
+        <div *ngIf="!game.gameOverVictory"><p>You lose...</p></div>
     </div>
 </div>

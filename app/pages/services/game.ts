@@ -122,6 +122,9 @@ export class Game {
 
         this._gameOver = true;
         this._gameOverVictory = message.receiverWins;
+
+        // Required to propagate changes through to UI.
+        this._changeDetector.detectChanges();
     }
 
     get isOwnTurn(): boolean {

@@ -1,5 +1,4 @@
 @import "../../theme/partials/app";
-
 .game-board {
     height: 100%;
     background-color: black;
@@ -33,6 +32,12 @@
     }
 }
 
+.game-over-footer {
+    p {
+        color: red;
+    }
+}
+
 .game-board-loading {
     p {
         color: red;
@@ -40,7 +45,7 @@
 }
 
 .game-board-character-selected {
-    border:2px solid #ff0000;
+    border: 2px solid #ff0000;
 }
 
 .game-board-character-eliminated {
