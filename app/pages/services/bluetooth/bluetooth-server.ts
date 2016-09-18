@@ -29,6 +29,7 @@ export class BluetoothServer {
             this.resolveConnect = resolve;
             this.rejectConnect = reject;
 
+            console.log('Setting connection wait timer.');
             this.connectionWaitTimer = setTimeout(() => {
                 this.cancelConnect('Timed out waiting for opponent.');
             }, this.config.connectionWaitTimeout);
@@ -65,11 +66,11 @@ export class BluetoothServer {
 
     public closeConnection = (): Promise < any > => {
         return new Promise((resolve, reject) => {
-            console.log('Closing bluetooth connection...');
+            console.log('Closing bluetooth connection on server socket:', this.serverSocketId);
 
             networking.bluetooth.onReceive.removeListener(this.onReceive);
             networking.bluetooth.onAccept.removeListener(this.onAccept);
-
+            console.log('Clearing timeout.');
             window.clearTimeout(this.connectionWaitTimer);
 
             if (!this.serverSocketId) {
@@ -99,19 +100,25 @@ export class BluetoothServer {
 
         networking.bluetooth.send(acceptInfo.clientSocketId, this.config.confirmationMessageView.buffer, () => {
             console.log('Confirmation message sent to socket: ' + acceptInfo.clientSocketId);
+            console.log(this.config.confirmationMessageView);
+
+            // TODO: this is required so that next message sent via bluetooth doesn't get mangled with the confirmation message.
+            setTimeout(() => {
+                this.clientSocketId = acceptInfo.clientSocketId;
+
+                networking.bluetooth.onAccept.removeListener(this.onAccept);
+                console.log('Clearing timeout.');
+                window.clearTimeout(this.connectionWaitTimer);
+
+                networking.bluetooth.onReceive.addListener(this.onReceive);
+
+                this.isConnected = true;
+                this.resolveConnect(this.clientSocketId);
+            }, this.config.postConfirmationWaitTimeout);
+               
         }, (errorMessage) => {
             this.cancelConnect('Failed to send confirmation message: ' + errorMessage);
         });
-
-        this.clientSocketId = acceptInfo.clientSocketId;
-
-        networking.bluetooth.onAccept.removeListener(this.onAccept);
-        window.clearTimeout(this.connectionWaitTimer);
-
-        networking.bluetooth.onReceive.addListener(this.onReceive);
-
-        this.isConnected = true;
-        this.resolveConnect(this.clientSocketId);
     }
 
     private cancelConnect = (reason: string) => {

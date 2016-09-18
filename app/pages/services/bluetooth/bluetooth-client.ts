@@ -102,7 +102,8 @@ export class BluetoothClient {
     private onReceiveConfirmation = (receiveInfo: any) => {
         let receivedMessageView = new Uint8Array(receiveInfo.data);
 
-        if (_.isEqual(receivedMessageView, this.config.confirmationMessageView)) {
+        // Compare first 8 bytes as we seem to be getting other stuff through too.
+        if (_.isEqual(receivedMessageView.subarray(0, 8), this.config.confirmationMessageView)) {
             console.log('Server has confirmed connection success!');
             networking.bluetooth.onReceive.removeListener(this.onReceiveConfirmation);
             window.clearTimeout(this.confirmationTimer);
@@ -112,6 +113,10 @@ export class BluetoothClient {
             this.resolveConnect(this.serverSocketId);
         } else {
             this.cancelConnect('Server connection confirmation message was not of the expected format.');
+            console.log('Expected: ');
+            console.log(this.config.confirmationMessageView);
+            console.log('Received: ');
+            console.log(receivedMessageView);
         }
     }
 

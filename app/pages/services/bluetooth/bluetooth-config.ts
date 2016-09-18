@@ -14,6 +14,9 @@ export class BluetoothConfig {
     public discoveryTimeout: number = 5000;
     // How long client should wait for server to send confirmation message before timing out.
     public confirmationTimeout: number = 1000;
+    // How long server should wait after sending the confirmation message, before connection is complete. 
+    // TODO: this is a hack to stop the confirmation message getting mangled with subsequent messages sent over bluetooth.
+    public postConfirmationWaitTimeout: number = 500;
     // How many attempts client and server should make to connect to one another.
     public maxConnectionAttempts: number = 10;
 }

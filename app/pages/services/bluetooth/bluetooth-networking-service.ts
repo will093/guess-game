@@ -79,7 +79,7 @@ export class BluetoothNetworkingService {
         let buffer = new encoding.TextEncoder().encode(stringified).buffer;
 
         console.log('Sending data:');
-        console.log(buffer);
+        console.log(stringified);
 
         networking.bluetooth.send(this.opponentSocketId, buffer, (bytesSent) => {
             console.log('Sent ' + bytesSent + ' bytes');
