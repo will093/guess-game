@@ -13,7 +13,7 @@ export class Game {
 
     private _characters: Array < Character > ;
 
-    // Resolved when the game has been started
+    // A promise which is resolved when the game has been started.
     private _gameStarted: Promise < void >;
     private _resolveGameStarted: Function;
 
@@ -23,6 +23,8 @@ export class Game {
 
     constructor(private characterGenerator: CharacterGenerator, private ownPlayer: OwnPlayer, 
         private opponentPlayer: OpponentPlayer, private messageService: MessageService, private _changeDetector: ChangeDetectorRef) {
+        console.log('Game constructor executing.');
+
         // Subscribe our callback functions to the appropriate events - subscribe once in constructor, and then never unsubscribe.
         messageService.onStartGame.subscribe(this.gameStarted);
         messageService.onEndTurn.subscribe(this.turnEnded);
@@ -35,7 +37,31 @@ export class Game {
     }
 
 
-    public startNewGame = (): Promise < void > => {
+    // Reset the game to its initial state, ready to start a new game.
+    public resetGameState = (): void => {
+        this._isOwnTurn = undefined;
+        this._characters = undefined;
+        // Set up the promise which will be resolved when the game is started.
+        this._gameStarted = new Promise <void> ((resolve, reject) => { 
+            this._resolveGameStarted = resolve; 
+        });
+
+        this._gameOver = undefined;
+        this._gameOverVictory = undefined;
+
+        this.ownPlayer.role = undefined;
+        this.ownPlayer.characterId = undefined;
+
+        this.opponentPlayer.role = undefined;
+        this.opponentPlayer.characterId = undefined;
+        console.log('Game state was reset, ready for a new game.');
+    }
+
+
+    // Start the game - returns a promise which is resolved instantly for the host who sets up the game, for the opponent
+    // the promise is resolved by the game started event.
+    public startGame = (): Promise < void > => {
+        console.log('Starting game...');
 
         // Host sets up game and then sends game data to opponent.
         if (this.ownPlayer.role === PlayerRole.Host) {
@@ -93,6 +119,7 @@ export class Game {
 
         this._isOwnTurn = false;
 
+        console.log('Turn ended.');
         this.messageService.endTurn();
     }
 
@@ -112,6 +139,7 @@ export class Game {
         this._gameOver = true;
         this._gameOverVictory = guessCorrect;
 
+        console.log('Character guessed.');
         return guessCorrect;
     }
 

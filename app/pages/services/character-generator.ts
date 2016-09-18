@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Character } from './character';
+import * as _ from 'lodash';
 
 // TODO: this should implement an interface. Can we then inject it with the type of the interface?
 // Service for generating character sets.
@@ -7,7 +8,7 @@ import { Character } from './character';
 export class CharacterGenerator {
 
     public generateCharacterSet = (): Array < Character > => {
-        return [
+        let characters = [
             { characterId: '1', imagePath: 'build/images/test-set/1.jpg', name: '', isSelected: false, isEliminated: false },
             { characterId: '2', imagePath: 'build/images/test-set/2.jpg', name: '', isSelected: false, isEliminated: false },
             { characterId: '3', imagePath: 'build/images/test-set/3.jpg', name: '', isSelected: false, isEliminated: false },
@@ -30,6 +31,8 @@ export class CharacterGenerator {
             { characterId: '20', imagePath: 'build/images/test-set/20.jpg', name: '', isSelected: false, isEliminated: false },
             { characterId: '21', imagePath: 'build/images/test-set/21.jpg', name: '', isSelected: false, isEliminated: false },
         ];
+
+        return _.cloneDeep(characters);
     }
 }
 

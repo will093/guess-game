@@ -1,9 +1,9 @@
-import { Page } from 'ionic-angular';
+import { Page, NavController } from 'ionic-angular';
 import { Game } from '../services/game';
 import { OwnPlayer } from '../services/player';
 import { Character } from '../services/character';
+import { MainMenuPage } from '../main-menu/main-menu';
 import * as _ from 'lodash';
-
 
 @Page({
     templateUrl: 'build/pages/game-board/game-board.html',
@@ -18,8 +18,8 @@ export class GameBoardPage {
 
     public ownCharacter: Character;
 
-    constructor(public game: Game, private _ownPlayer: OwnPlayer) {
-        this.game.startNewGame().then(() => {
+    constructor(public game: Game, private _ownPlayer: OwnPlayer, private _nav: NavController) {
+        this.game.startGame().then(() => {
             // Separate the characters into 2 rows. TODO: Is there a neater way of doing this?
             this.characterRow1 = this.game.characters.slice(0, 7);
             this.characterRow2 = this.game.characters.slice(7, 14);
@@ -34,7 +34,7 @@ export class GameBoardPage {
 
     public characterTapped = (character: Character): void => {
         // Character can only be selected if it is the players turn and the character is not already eliminated.
-        if (!this.game.isOwnTurn || character.isEliminated) {
+        if (!this.game.isOwnTurn || this.game.gameOver || character.isEliminated) {
             return;
         }
         // Toggle whether the character is selected.
@@ -59,6 +59,15 @@ export class GameBoardPage {
         if (selectedCharacters.length === 1) {
             this.game.guessCharacter(selectedCharacters[0].characterId);
         }
+    }
+
+    public returnToMenu = (): void => {
+        this._nav.setRoot(MainMenuPage);
+    }
+
+    ionViewDidUnload() {
+        this.game.resetGameState();
+        this.returnToMenu();
     }
 }
 

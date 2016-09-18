@@ -29,7 +29,6 @@ export class BluetoothServer {
             this.resolveConnect = resolve;
             this.rejectConnect = reject;
 
-            console.log('Setting connection wait timer.');
             this.connectionWaitTimer = setTimeout(() => {
                 this.cancelConnect('Timed out waiting for opponent.');
             }, this.config.connectionWaitTimeout);
@@ -70,7 +69,6 @@ export class BluetoothServer {
 
             networking.bluetooth.onReceive.removeListener(this.onReceive);
             networking.bluetooth.onAccept.removeListener(this.onAccept);
-            console.log('Clearing timeout.');
             window.clearTimeout(this.connectionWaitTimer);
 
             if (!this.serverSocketId) {
@@ -107,7 +105,6 @@ export class BluetoothServer {
                 this.clientSocketId = acceptInfo.clientSocketId;
 
                 networking.bluetooth.onAccept.removeListener(this.onAccept);
-                console.log('Clearing timeout.');
                 window.clearTimeout(this.connectionWaitTimer);
 
                 networking.bluetooth.onReceive.addListener(this.onReceive);

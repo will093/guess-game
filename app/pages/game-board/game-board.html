@@ -23,5 +23,6 @@
     <div *ngIf="game.gameOver" class="game-over-footer">
         <div *ngIf="game.gameOverVictory"><p>You win!!!</p></div>
         <div *ngIf="!game.gameOverVictory"><p>You lose...</p></div>
+        <button class="button button-positive" (click)="returnToMenu()">Return to home screen.</button>
     </div>
 </div>
