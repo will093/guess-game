@@ -1,11 +1,12 @@
-import { Page, NavController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController } from 'ionic-angular';
 import { Game } from '../services/game';
 import { OwnPlayer } from '../services/player';
 import { Character } from '../services/character';
 import { MainMenuPage } from '../main-menu/main-menu';
 import * as _ from 'lodash';
 
-@Page({
+@Component({
     templateUrl: 'build/pages/game-board/game-board.html',
 })
 export class GameBoardPage {

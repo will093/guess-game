@@ -1,8 +1,9 @@
-import { Page, NavController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController } from 'ionic-angular';
 import { BluetoothNetworkingHelper } from '../services/bluetooth-networking-helper';
 import { GameBoardPage } from '../game-board/game-board';
 
-@Page({
+@Component({
     templateUrl: 'build/pages/waiting-room/waiting-room.html',
 })
 
