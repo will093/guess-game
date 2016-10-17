@@ -1,4 +1,4 @@
 <div class="waiting-room">
-    <p>{{statusMessage}}</p>
-    <p></p>
+    <h3>{{statusMessage}}</h3>
+    <button *ngIf="connectionFailed" class="button" (click)="returnToMenu()">Return to menu</button>
 </div>

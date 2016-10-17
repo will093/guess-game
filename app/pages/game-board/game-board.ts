@@ -13,18 +13,19 @@ export class GameBoardPage {
 
     public gameLoading: Boolean = true;
 
-    public characterRow1: Array < Character >;
-    public characterRow2: Array < Character >;
-    public characterRow3: Array < Character >;
+    public characterGrid: Array <Array < Character >>;
 
     public ownCharacter: Character;
 
     constructor(public game: Game, private _ownPlayer: OwnPlayer, private _nav: NavController) {
         this.game.startGame().then(() => {
             // Separate the characters into 2 rows. TODO: Is there a neater way of doing this?
-            this.characterRow1 = this.game.characters.slice(0, 7);
-            this.characterRow2 = this.game.characters.slice(7, 14);
-            this.characterRow3 = this.game.characters.slice(14, 21);
+            this.characterGrid = [
+                this.game.characters.slice(0, 5),
+                this.game.characters.slice(5, 10),
+                this.game.characters.slice(10, 15),
+                this.game.characters.slice(15, 20),
+            ];
 
             this.ownCharacter = _.find(this.game.characters, (character: Character) => {
                 return character.characterId === this._ownPlayer.characterId;

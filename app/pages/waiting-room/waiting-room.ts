@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { BluetoothNetworkingHelper } from '../services/bluetooth-networking-helper';
 import { GameBoardPage } from '../game-board/game-board';
+import { MainMenuPage } from '../main-menu/main-menu';
 
 @Component({
     templateUrl: 'build/pages/waiting-room/waiting-room.html',
@@ -9,18 +10,25 @@ import { GameBoardPage } from '../game-board/game-board';
 
 export class WaitingRoomPage {
 
-    private statusMessage: string;
+    statusMessage: string;
 
-    // TODO - should this go in the constructor or somewhere else?
-    constructor(private nav: NavController, private networkingHelper: BluetoothNetworkingHelper) {
+    constructor(private nav: NavController, private networkingHelper: BluetoothNetworkingHelper) {}
+
+    ionViewLoaded() {
         this.statusMessage = 'Connecting...';
 
         this.networkingHelper.connect().then((successMessage) => {
-            this.statusMessage = successMessage;
+            console.log(successMessage);
+            this.statusMessage = 'Succesfully connected!';
             this.nav.push(GameBoardPage);
         }, (errorMessage) => {
-            this.statusMessage = errorMessage;
+            console.log(errorMessage);
+            this.statusMessage = 'Failed to connect';
         });
     }
+
+    returnToMenu(): void {
+        this.nav.pop();
+    };
 }
 

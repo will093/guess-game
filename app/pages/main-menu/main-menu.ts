@@ -17,7 +17,7 @@ export class MainMenuPage {
     }
 
     // TODO: do this when leaving gameboard.
-    onPageWillEnter(): void {
+    ionViewWillEnter(): void {
         this.networkingHelper.closeConnection();
     }
 

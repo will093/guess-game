@@ -7,6 +7,14 @@
 // By default each design mode includes these shared imports.
 // App Shared Sass variables belong in app.variables.scss.
 
+@font-face {
+    font-family: 'Modak';
+    src: url('../../fonts/Modak/Modak-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 @import "../pages/main-menu/main-menu";
 @import "../pages/waiting-room/waiting-room";
 @import "../pages/game-board/game-board";
+@import "../../node_modules/font-awesome/scss/font-awesome";

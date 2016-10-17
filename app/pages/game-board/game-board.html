@@ -1,28 +1,65 @@
-<div class="game-board-loading" *ngIf="gameLoading">
-    Initialising the game.
-</div>
-<div class="game-board" *ngIf="!gameLoading">
-    <div class="game-board-row">
-        <img *ngFor="#character of characterRow1" [ngClass]="{'game-board-character-selected': character.isSelected, 'game-board-character-eliminated': character.isEliminated }" src={{character.imagePath}} (click)="characterTapped(character)">
-    </div>
-    <div class="game-board-row">
-        <img *ngFor="#character of characterRow2" [ngClass]="{'game-board-character-selected': character.isSelected, 'game-board-character-eliminated': character.isEliminated }" src={{character.imagePath}} (click)="characterTapped(character)">
-    </div>
-    <div class="game-board-row">
-        <img *ngFor="#character of characterRow3" [ngClass]="{'game-board-character-selected': character.isSelected, 'game-board-character-eliminated': character.isEliminated }" src={{character.imagePath}} (click)="characterTapped(character)">
-    </div>
-    <div *ngIf="!game.gameOver" class="game-board-footer">
-        <div class="game-board-footer-inner">
-            <button class="button button-positive" (click)="endTurn()">End Turn</button>
-            <img src={{ownCharacter.imagePath}}>
-            <p *ngIf="game.isOwnTurn">Your turn</p>
-            <p *ngIf="!game.isOwnTurn">Opponent's turn</p>
-            <button class="button button-assertive" (click)="guessSelectedCharacter()">Guess!</button>
-        </div>
-    </div>
-    <div *ngIf="game.gameOver" class="game-over-footer">
-        <div *ngIf="game.gameOverVictory"><p>You win!!!</p></div>
-        <div *ngIf="!game.gameOverVictory"><p>You lose...</p></div>
-        <button class="button button-positive" (click)="returnToMenu()">Return to home screen.</button>
-    </div>
-</div>
+<ion-content>
+    <ion-grid class="game-board" *ngIf="!gameLoading">
+        <ion-row>
+            <ion-col class="game-board-characters">
+                <ion-row *ngFor="#characterRow of characterGrid">
+                    <ion-col *ngFor="#character of characterRow">
+                        <div class="flip-container" [ngClass]="{'game-board-character-eliminated': character.isEliminated }">
+                            <div class="flipper">
+                                <div class="front">
+                                    <div class="character" [ngClass]="{'game-board-character-selected': character.isSelected }">
+                                        <img src={{character.imagePath}} (click)="characterTapped(character)">
+                                        <p>{{character.name}}</p>
+                                    </div>
+                                </div>
+                                <div class="back">
+                                    <h3><i class="fa fa-question"></i></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+            <ion-col class="game-board-dash">
+                <ion-row class="menu-row">
+                    <ion-col>
+                        <p *ngIf="game.isOwnTurn">Your turn</p>
+                        <p *ngIf="!game.isOwnTurn">Opponent's turn</p>
+                    </ion-col>
+                    <ion-col>
+                        <button class="button">Menu</button>
+                    </ion-col>
+                </ion-row>
+                <ion-row class="own-character-row">
+                    <ion-col>
+                        <div class="character">
+                            <img src={{ownCharacter.imagePath}}>
+                            <p>{{ownCharacter.name}}</p>
+                        </div>
+                    </ion-col>
+                </ion-row>
+                <ion-row class="actions-row">
+                    <ion-col>
+                        <button class="button" (click)="endTurn()">Flip</button>
+                    </ion-col>
+                    <ion-col>
+                        <button class="button" (click)="guessSelectedCharacter()">Guess!</button>
+                    </ion-col>
+                </ion-row>
+                <ion-grid *ngIf="game.gameOver">
+                    <ion-row *ngIf="game.gameOver">
+                        <div *ngIf="game.gameOver">
+                            <div *ngIf="game.gameOverVictory">
+                                <p>You win!!!</p>
+                            </div>
+                            <div *ngIf="!game.gameOverVictory">
+                                <p>You lose...</p>
+                            </div>
+                            <button class="button" (click)="returnToMenu()">Return to home screen.</button>
+                        </div>
+                    </ion-row>
+                </ion-grid>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

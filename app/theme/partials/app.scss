@@ -1,4 +1,6 @@
-html, body, .content {
+html,
+body,
+.content {
     height: 100%;
 }
 
@@ -12,3 +14,26 @@ html, body, .content {
     -webkit-justify-content: $justify;
     justify-content: $justify;
 }
+
+@mixin app-background() {
+    background: linear-gradient(-45deg, darken(color($colors, secondary), 10%), lighten(color($colors, secondary), 10%));
+}
+
+.button {
+    font-family: Verdana, sans-serif;
+    border: 1px solid color($colors, dark);
+    border-radius: 12px;
+    color: color($colors, dark);
+}
+
+.button-large {
+    border-radius: 20px;
+}
+
+// @mixin column($width) {
+//     -webkit-box-flex: 0;
+//     -webkit-flex: 0 0 $width;
+//     -ms-flex: 0 0 percentage($width/100);
+//     flex: 0 0 percentage($width/100);
+//     max-width: percentage($width/100);
+// }

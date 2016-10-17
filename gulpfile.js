@@ -36,32 +36,32 @@ var tslint = require('ionic-gulp-tslint');
 
 var isRelease = argv.indexOf('--release') > -1;
 
-gulp.task('watch', ['clean'], function(done){
-  runSequence(
-    ['sass', 'html', 'fonts', 'scripts'],
-    function(){
-      gulpWatch('app/**/*.scss', function(){ gulp.start('sass'); });
-      gulpWatch('app/**/*.html', function(){ gulp.start('html'); });
-      buildBrowserify({ watch: true }).on('end', done);
-    }
-  );
+gulp.task('watch', ['clean'], function(done) {
+    runSequence(
+        ['sass', 'html', 'fonts', 'scripts', 'images'],
+        function() {
+            gulpWatch('app/**/*.scss', function() { gulp.start('sass'); });
+            gulpWatch('app/**/*.html', function() { gulp.start('html'); });
+            buildBrowserify({ watch: true }).on('end', done);
+        }
+    );
 });
 
-gulp.task('build', ['clean'], function(done){
-  runSequence(
-    ['sass', 'html', 'fonts', 'scripts', 'images'],
-    function(){
-      buildBrowserify({
-        minify: isRelease,
-        browserifyOptions: {
-          debug: !isRelease
-        },
-        uglifyOptions: {
-          mangle: false
+gulp.task('build', ['clean'], function(done) {
+    runSequence(
+        ['sass', 'html', 'fonts', 'scripts', 'images'],
+        function() {
+            buildBrowserify({
+                minify: isRelease,
+                browserifyOptions: {
+                    debug: !isRelease
+                },
+                uglifyOptions: {
+                    mangle: false
+                }
+            }).on('end', done);
         }
-      }).on('end', done);
-    }
-  );
+    );
 });
 
 gulp.task('images', function() {
@@ -69,11 +69,33 @@ gulp.task('images', function() {
         .pipe(gulp.dest('www/build/images'));
 });
 
-gulp.task('sass', buildSass);
+gulp.task('font-awesome', function() {
+    return gulp.src('node_modules/font-awesome/css/font-awesome.min.css')
+        .pipe(gulp.dest('www/build/fonts'));
+});
+
+gulp.task('sass', function() {
+    return buildSass({
+        sassOptions: {
+            includePaths: [
+                'node_modules/ionic-angular',
+                'node_modules/ionicons/dist/scss',
+                'node_modules/font-awesome/scss'
+            ]
+        }
+    });
+});
 gulp.task('html', copyHTML);
-gulp.task('fonts', copyFonts);
+gulp.task('fonts', function() {
+    return copyFonts({
+        src: [
+            'node_modules/ionic-angular/fonts/**/*.+(ttf|woff|woff2)',
+            'node_modules/font-awesome/fonts/**/*.+(eot|ttf|woff|woff2|svg)'
+        ]
+    });
+});
 gulp.task('scripts', copyScripts);
-gulp.task('clean', function(){
-  return del('www/build');
+gulp.task('clean', function() {
+    return del('www/build');
 });
 gulp.task('lint', tslint);

@@ -1,9 +1,15 @@
 @import "../../theme/partials/app";
+
 .waiting-room {
     height: 100%;
-    background-color: black;
+    @include app-background();
     @include flex-container(column, center, center);
-    p {
-        color: red;
+    h3 {       
+        color: color($colors, dark);
+        font-family: Verdana, sans-serif;
+    }
+    .button,
+    button {
+        margin-top: 10px
     }
 }

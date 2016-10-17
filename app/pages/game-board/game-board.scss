@@ -1,53 +1,137 @@
 @import "../../theme/partials/app";
 .game-board {
     height: 100%;
-    background-color: black;
-    @include flex-container(column, center, center);
+    justify-content: center;
+    @include app-background();
+    padding: 3px;
+}
+
+.game-board-characters {
+    max-width: 65%;
+    display: flex;
+    flex-direction: column;
+
+    ion-col {
+        padding: 0px 3px;
+    }
+}
+
+.character {
+    overflow: hidden;
     img {
-        width: 14%;
-        padding: 2px;
-    }
-}
-
-.game-board-row {
-    @include flex-container(row, center, center);
-}
-
-.game-board-footer {
-    @include flex-container(column, center, center);
-    flex: 1;
-    width: 100%;
-    .game-board-footer-inner {
-        @include flex-container(row, center, space-between);
         width: 100%;
-        button {
-            margin: 0 20px;
-        }
-        img {
-            width: 12%;
-        }
-        p {
-            color: red;
-        }
+        display: block;
     }
-}
-
-.game-over-footer {
     p {
-        color: red;
+        text-align: center;
+        margin: 0px;
+        padding: 0px;
+        font-size: 1.5vw;
+        line-height: 120%;
+        background-color: color($colors, dark);
+        color: color($colors, secondary);
+        font-family: Verdana, sans-serif;
     }
 }
 
-.game-board-loading {
-    p {
-        color: red;
+.game-board-dash {
+    background: lighten(color($colors, secondary), 5%);
+    max-width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+    ion-col {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .menu-row {
+        flex: 1;
+        ion-col {
+            p {
+                color: color($colors, dark);
+            }
+            display: flex;
+            align-items: center;
+            text-align: center;
+            .button {
+                width: 100%
+            }
+        }
+    }
+    .own-character-row {
+        flex: 4;
+        .character {
+            width: 35%;
+        }
+    }
+    .actions-row {
+        flex: 1;
+        .button {
+            width: 100%
+        }
     }
 }
 
+// Code for character card flip animation.
+.flip-container {
+    perspective: 1000px;
+    margin: 3px 3px 3px 3px;
+}
+
+.game-board-character-eliminated .flipper,
+{
+    transform: rotateY(180deg);
+}
+
+// Flip speed goes here
+.flipper {
+    transition: 0.6s;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+// Hide back of pane during swap
+.front,
+.back {
+    backface-visibility: hidden;
+}
+
+// Front pane, placed above back
+.front {
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+
+// Back, initially hidden pane
+.back {
+    box-sizing: border-box;
+    transform: rotateY(180deg);
+    background-color: color($colors, primary);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    h3 {
+        font-size: 10vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        margin: 0px;
+        font-family: 'Modak', cursive;
+        color: color($colors, dark);
+    }
+}
+
+.back,
+.character {
+    border-radius: 2vw;
+    border: 0.5vw solid color($colors, dark);
+}
+
+// Code for showing character cards as selected.
 .game-board-character-selected {
-    border: 2px solid #ff0000;
-}
-
-.game-board-character-eliminated {
-    opacity: 0.1;
+    border-color: color($colors, primary);
 }

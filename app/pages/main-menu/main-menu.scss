@@ -1,17 +1,18 @@
 @import "../../theme/partials/app";
 
 .main-menu {
+    @include flex-container(column, center, center);
     height: 100%;
-    background-color: black;
-    .main-menu-options {
-        @include flex-container(column, center, center);
-        button {
-            margin: 20px;
-        }
-    }
-    .main-menu-title {
+    @include app-background();
+    .main-title {
+        font-size: 15vw;
+        font-family: 'Modak', cursive;
         text-align: center;
-        color: orange;
-        padding: 10px;
+        color: color($colors, primary);
+        margin: 0px;
+        text-shadow: -1px 0 color($colors, dark), 0 1px color($colors, dark), 1px 0 color($colors, dark), 0 -1px color($colors, dark);
+    }
+    button, .button {
+        margin: 20px;
     }
 }
