@@ -6,30 +6,30 @@ declare var networking: any;
 @Injectable()
 export class BluetoothServer {
 
-    private isConnected: boolean = false;
+    private _isConnected: boolean = false;
 
-    private serverSocketId: string;
-    private clientSocketId: string;
+    private _serverSocketId: string;
+    private _clientSocketId: string;
 
-    private onReceive: Function;
+    private _onReceive: Function;
 
-    private connectionWaitTimer: any;
+    private _connectionWaitTimer: any;
 
-    private resolveConnect: Function;
-    private rejectConnect: Function;
+    private _resolveConnect: Function;
+    private _rejectConnect: Function;
 
     constructor(private config: BluetoothConfig) {}
 
     public connect = (onReceive: Function): Promise < string > => {
         console.log('Connecting...');
 
-        this.onReceive = onReceive;
+        this._onReceive = onReceive;
 
         let connectPromise = new Promise((resolve, reject) => {
-            this.resolveConnect = resolve;
-            this.rejectConnect = reject;
+            this._resolveConnect = resolve;
+            this._rejectConnect = reject;
 
-            this.connectionWaitTimer = setTimeout(() => {
+            this._connectionWaitTimer = setTimeout(() => {
                 this.cancelConnect('Timed out waiting for opponent.');
             }, this.config.connectionWaitTimeout);
         });
@@ -55,7 +55,7 @@ export class BluetoothServer {
         return networking.bluetooth.listenUsingRfcomm(this.config.uuid, (serverSocketId) => {
             console.log('Listening for connections on server socket: ' + serverSocketId);
 
-            this.serverSocketId = serverSocketId;
+            this._serverSocketId = serverSocketId;
 
             networking.bluetooth.onAccept.addListener(this.onAccept);
         }, (errorMessage) => {
@@ -65,22 +65,22 @@ export class BluetoothServer {
 
     public closeConnection = (): Promise < any > => {
         return new Promise((resolve, reject) => {
-            console.log('Closing bluetooth connection on server socket:', this.serverSocketId);
+            console.log('Closing bluetooth connection on server socket:', this._serverSocketId);
 
-            networking.bluetooth.onReceive.removeListener(this.onReceive);
+            networking.bluetooth.onReceive.removeListener(this._onReceive);
             networking.bluetooth.onAccept.removeListener(this.onAccept);
-            window.clearTimeout(this.connectionWaitTimer);
+            window.clearTimeout(this._connectionWaitTimer);
 
-            if (!this.serverSocketId) {
-                this.isConnected = false;
+            if (!this._serverSocketId) {
+                this._isConnected = false;
                 resolve();
             }
 
-            networking.bluetooth.close(this.serverSocketId, () => {
-                this.isConnected = false;
+            networking.bluetooth.close(this._serverSocketId, () => {
+                this._isConnected = false;
                 resolve();
             }, (errorMessage) => {
-                console.log('Failed to unpublish service on socket ' + this.serverSocketId + ': ' + errorMessage);
+                console.log('Failed to unpublish service on socket ' + this._serverSocketId + ': ' + errorMessage);
                 reject();
             });
         });
@@ -91,8 +91,8 @@ export class BluetoothServer {
 
         console.log('Accepted a connection!');
 
-        if (acceptInfo.socketId !== this.serverSocketId) {
-            this.cancelConnect('Accepted connection is on the wrong socket, should be socket ' + this.serverSocketId + ', but was socket ' + acceptInfo.socketId);
+        if (acceptInfo.socketId !== this._serverSocketId) {
+            this.cancelConnect('Accepted connection is on the wrong socket, should be socket ' + this._serverSocketId + ', but was socket ' + acceptInfo.socketId);
             return;
         }
 
@@ -102,15 +102,15 @@ export class BluetoothServer {
 
             // TODO: this is required so that next message sent via bluetooth doesn't get mangled with the confirmation message.
             setTimeout(() => {
-                this.clientSocketId = acceptInfo.clientSocketId;
+                this._clientSocketId = acceptInfo.clientSocketId;
 
                 networking.bluetooth.onAccept.removeListener(this.onAccept);
-                window.clearTimeout(this.connectionWaitTimer);
+                window.clearTimeout(this._connectionWaitTimer);
 
-                networking.bluetooth.onReceive.addListener(this.onReceive);
+                networking.bluetooth.onReceive.addListener(this._onReceive);
 
-                this.isConnected = true;
-                this.resolveConnect(this.clientSocketId);
+                this._isConnected = true;
+                this._resolveConnect(this._clientSocketId);
             }, this.config.postConfirmationWaitTimeout);
                
         }, (errorMessage) => {
@@ -121,9 +121,9 @@ export class BluetoothServer {
     private cancelConnect = (reason: string) => {
         console.log(reason);
         this.closeConnection().then(() => {
-            this.rejectConnect(reason);
+            this._rejectConnect(reason);
         }, () => {
-            this.rejectConnect(reason);
+            this._rejectConnect(reason);
         });
     };
 }

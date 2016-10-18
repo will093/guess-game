@@ -10,25 +10,25 @@ import { MainMenuPage } from '../main-menu/main-menu';
 
 export class WaitingRoomPage {
 
-    statusMessage: string;
+    public statusMessage: string;
 
-    constructor(private nav: NavController, private networkingHelper: BluetoothNetworkingHelper) {}
+    constructor(private _nav: NavController, private _networkingHelper: BluetoothNetworkingHelper) {}
 
     ionViewLoaded() {
         this.statusMessage = 'Connecting...';
 
-        this.networkingHelper.connect().then((successMessage) => {
+        this._networkingHelper.connect().then((successMessage) => {
             console.log(successMessage);
             this.statusMessage = 'Succesfully connected!';
-            this.nav.push(GameBoardPage);
+            this._nav.push(GameBoardPage);
         }, (errorMessage) => {
             console.log(errorMessage);
             this.statusMessage = 'Failed to connect';
         });
     }
 
-    returnToMenu(): void {
-        this.nav.pop();
+    public returnToMenu(): void {
+        this._nav.pop();
     };
 }
 

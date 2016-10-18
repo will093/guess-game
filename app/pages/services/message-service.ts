@@ -7,8 +7,8 @@ import { IMessage, MessageType, StartGameMessage, EndGameMessage } from './messa
 @Injectable()
 export class MessageService {
 
-    public constructor(private networkingService: BluetoothNetworkingService) {
-        networkingService.onDataReceived.subscribe(this.dataReceived);
+    public constructor(private _networkingService: BluetoothNetworkingService) {
+        _networkingService.onDataReceived.subscribe(this.dataReceived);
     }
 
     // Sends a message to the other device to start a new game.
@@ -24,7 +24,7 @@ export class MessageService {
         console.log('Sending start game message:');
         console.log(message);
 
-        this.networkingService.send(message);
+        this._networkingService.send(message);
     }
 
     // Inform the other device that the current player's turn has ended.
@@ -32,7 +32,7 @@ export class MessageService {
         var message: IMessage = {
             messageType: MessageType.EndTurn,
         };
-        this.networkingService.send(message);
+        this._networkingService.send(message);
     }
 
     // Inform the other device that the game has ended.
@@ -41,7 +41,7 @@ export class MessageService {
             messageType: MessageType.EndGame,
             receiverWins: !victory,
         };
-        this.networkingService.send(message);
+        this._networkingService.send(message);
     }
 
     public onStartGame: IEvent<StartGameMessage> = new Event<StartGameMessage>();

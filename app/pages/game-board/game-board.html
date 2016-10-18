@@ -27,7 +27,7 @@
                         <p *ngIf="!game.isOwnTurn">Opponent's turn</p>
                     </ion-col>
                     <ion-col>
-                        <button class="button">Menu</button>
+                        <button class="button" (click)="returnToMenu()">Menu</button>
                     </ion-col>
                 </ion-row>
                 <ion-row class="own-character-row">
@@ -45,20 +45,7 @@
                     <ion-col>
                         <button class="button" (click)="guessSelectedCharacter()">Guess!</button>
                     </ion-col>
-                </ion-row>
-                <ion-grid *ngIf="game.gameOver">
-                    <ion-row *ngIf="game.gameOver">
-                        <div *ngIf="game.gameOver">
-                            <div *ngIf="game.gameOverVictory">
-                                <p>You win!!!</p>
-                            </div>
-                            <div *ngIf="!game.gameOverVictory">
-                                <p>You lose...</p>
-                            </div>
-                            <button class="button" (click)="returnToMenu()">Return to home screen.</button>
-                        </div>
-                    </ion-row>
-                </ion-grid>
+                </ion-row>               
             </ion-col>
         </ion-row>
     </ion-grid>

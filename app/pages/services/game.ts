@@ -4,6 +4,7 @@ import { CharacterGenerator } from './character-generator';
 import { MessageService } from './message-service';
 import { OpponentPlayer, OwnPlayer, PlayerRole } from './player';
 import { StartGameMessage, EndGameMessage } from './message';
+import { IEvent, Event} from './event';
 
 // Model for the game itself.
 @Injectable()
@@ -21,14 +22,14 @@ export class Game {
 
     private _gameOverVictory: boolean;
 
-    constructor(private characterGenerator: CharacterGenerator, private ownPlayer: OwnPlayer, 
-        private opponentPlayer: OpponentPlayer, private messageService: MessageService, private _changeDetector: ChangeDetectorRef) {
+    constructor(private _characterGenerator: CharacterGenerator, private _ownPlayer: OwnPlayer, 
+        private _opponentPlayer: OpponentPlayer, private _messageService: MessageService, private _changeDetector: ChangeDetectorRef) {
         console.log('Game constructor executing.');
 
         // Subscribe our callback functions to the appropriate events - subscribe once in constructor, and then never unsubscribe.
-        messageService.onStartGame.subscribe(this.gameStarted);
-        messageService.onEndTurn.subscribe(this.turnEnded);
-        messageService.onEndGame.subscribe(this.characterGuessed);
+        _messageService.onStartGame.subscribe(this.gameStarted);
+        _messageService.onEndTurn.subscribe(this.turnEnded);
+        _messageService.onEndGame.subscribe(this.characterGuessed);
 
         // Set up the promise which will be resolved when the game is started.
         this._gameStarted = new Promise <void> ((resolve, reject) => { 
@@ -49,36 +50,37 @@ export class Game {
         this._gameOver = undefined;
         this._gameOverVictory = undefined;
 
-        this.ownPlayer.role = undefined;
-        this.ownPlayer.characterId = undefined;
+        this._ownPlayer.role = undefined;
+        this._ownPlayer.characterId = undefined;
 
-        this.opponentPlayer.role = undefined;
-        this.opponentPlayer.characterId = undefined;
+        this._opponentPlayer.role = undefined;
+        this._opponentPlayer.characterId = undefined;
         console.log('Game state was reset, ready for a new game.');
     }
 
 
+    // TODO - tidy this so that there is an ongamestarted event to subscribe to.
     // Start the game - returns a promise which is resolved instantly for the host who sets up the game, for the opponent
     // the promise is resolved by the game started event.
     public startGame = (): Promise < void > => {
         console.log('Starting game...');
 
         // Host sets up game and then sends game data to opponent.
-        if (this.ownPlayer.role === PlayerRole.Host) {
+        if (this._ownPlayer.role === PlayerRole.Host) {
 
             let getRandomId = (characters: Array < Character > ): string => {
                 var randomIndex = Math.floor(Math.random() * characters.length);
                 return characters[randomIndex].characterId;
             };
 
-            let characters = this.characterGenerator.generateCharacterSet();
+            let characters = this._characterGenerator.generateCharacterSet();
             let ownCharacterId = getRandomId(characters);
             let opponentCharacterId = getRandomId(characters);
             let isOwnTurn = !!Math.floor(Math.random() * 2);
 
             this.setUpGame(ownCharacterId, opponentCharacterId, isOwnTurn, characters);           
 
-            this.messageService.startNewGame(ownCharacterId, opponentCharacterId, isOwnTurn);
+            this._messageService.startNewGame(ownCharacterId, opponentCharacterId, isOwnTurn);
 
             // Game has now been initialised.
             this._resolveGameStarted();
@@ -93,7 +95,7 @@ export class Game {
         console.log(message);
 
         // Both host and opponent have the same fixed character set for now, so both can generate the characters locally.
-        let characters = this.characterGenerator.generateCharacterSet();
+        let characters = this._characterGenerator.generateCharacterSet();
         this.setUpGame(message.receiverCharacterId, message.senderCharacterId, message.isReceiverTurn, characters);
 
         // Game has now been initialised by the Host.
@@ -103,8 +105,8 @@ export class Game {
     private setUpGame = (ownCharacterId: string, opponentCharacterId: string, isOwnTurn: boolean, characters: Array < Character >): void => {
         this._characters = characters;
 
-        this.ownPlayer.characterId = ownCharacterId;
-        this.opponentPlayer.characterId = opponentCharacterId;
+        this._ownPlayer.characterId = ownCharacterId;
+        this._opponentPlayer.characterId = opponentCharacterId;
         this._isOwnTurn = isOwnTurn;
     }
 
@@ -118,9 +120,10 @@ export class Game {
         });
 
         this._isOwnTurn = false;
+        this.onTurnEnded.trigger();
 
         console.log('Turn ended.');
-        this.messageService.endTurn();
+        this._messageService.endTurn();
     }
 
     // Callback function, invoked when the other device ends their turn.
@@ -130,14 +133,18 @@ export class Game {
 
         // Required to propagate changes through to UI.
         this._changeDetector.detectChanges();
+
+        this.onTurnEnded.trigger();
     }
 
     public guessCharacter = (characterId: string): boolean => {
-        let guessCorrect = (characterId === this.opponentPlayer.characterId);
-        this.messageService.endGame(guessCorrect);
+        let guessCorrect = (characterId === this._opponentPlayer.characterId);
+        this._messageService.endGame(guessCorrect);
 
         this._gameOver = true;
         this._gameOverVictory = guessCorrect;
+
+        this.onGameEnded.trigger();
 
         console.log('Character guessed.');
         return guessCorrect;
@@ -153,7 +160,16 @@ export class Game {
 
         // Required to propagate changes through to UI.
         this._changeDetector.detectChanges();
+
+        this.onGameEnded.trigger();
     }
+
+    // Events which other parties may be interested in.
+    public onGameStarted: IEvent<void> = new Event<void>();
+
+    public onTurnEnded: IEvent<void> = new Event<void>();
+
+    public onGameEnded: IEvent<void> = new Event<void>();
 
     get isOwnTurn(): boolean {
         return this._isOwnTurn;

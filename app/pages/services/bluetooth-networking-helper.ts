@@ -7,21 +7,21 @@ import { BluetoothNetworkingService } from './bluetooth/bluetooth-networking-ser
 @Injectable()
 export class BluetoothNetworkingHelper {
 
-    constructor(private networkingService: BluetoothNetworkingService, private ownPlayer: OwnPlayer) {}
+    constructor(private _networkingService: BluetoothNetworkingService, private _ownPlayer: OwnPlayer) {}
 
     public connect(): Promise<string> {
-        if (this.ownPlayer.role === PlayerRole.Host) {
-            return this.networkingService.connectAsServer();
-        } else if (this.ownPlayer.role === PlayerRole.Opponent) {
-            return this.networkingService.connectAsClient();
+        if (this._ownPlayer.role === PlayerRole.Host) {
+            return this._networkingService.connectAsServer();
+        } else if (this._ownPlayer.role === PlayerRole.Opponent) {
+            return this._networkingService.connectAsClient();
         }
     }
 
     public closeConnection(): Promise<any> {
-        if (this.ownPlayer.role === PlayerRole.Host) {
-            return this.networkingService.closeConnectionAsServer();
-        } else if (this.ownPlayer.role === PlayerRole.Opponent) {
-            return this.networkingService.closeConnectionAsClient();
+        if (this._ownPlayer.role === PlayerRole.Host) {
+            return this._networkingService.closeConnectionAsServer();
+        } else if (this._ownPlayer.role === PlayerRole.Opponent) {
+            return this._networkingService.closeConnectionAsClient();
         }
     }
     

@@ -7,28 +7,28 @@ declare var networking: any;
 @Injectable()
 export class BluetoothClient {
 
-    private isConnected: boolean = false;
+    private _isConnected: boolean = false;
 
-    private serverSocketId: string;
+    private _serverSocketId: string;
 
-    private onReceive: Function;
+    private _onReceive: Function;
 
-    private discoveryTimer: any;
-    private confirmationTimer: any;
+    private _discoveryTimer: any;
+    private _confirmationTimer: any;
 
-    private resolveConnect: Function;
-    private rejectConnect: Function;
+    private _resolveConnect: Function;
+    private _rejectConnect: Function;
 
     constructor(private config: BluetoothConfig) {}
 
     public connect = (onReceive: Function): Promise < string > => {
         console.log('Connecting...');
 
-        this.onReceive = onReceive;
+        this._onReceive = onReceive;
 
         let connectPromise = new Promise((resolve, reject) => {
-            this.resolveConnect = resolve;
-            this.rejectConnect = reject;
+            this._resolveConnect = resolve;
+            this._rejectConnect = reject;
         });
 
         networking.bluetooth.requestEnable((adapterStater) => {
@@ -37,7 +37,7 @@ export class BluetoothClient {
 
                 networking.bluetooth.onDeviceAdded.addListener(this.onDeviceAdded);
 
-                this.discoveryTimer = setTimeout(this.onDiscoveryTimeout, this.config.discoveryTimeout);
+                this._discoveryTimer = setTimeout(this.onDiscoveryTimeout, this.config.discoveryTimeout);
             }, () => {
                 this.cancelConnect('Failed to start bluetooth discovery.');
             });
@@ -51,27 +51,27 @@ export class BluetoothClient {
     public closeConnection = (): Promise < any > => {
         return new Promise((resolve, reject) => {
 
-            console.log('Closing bluetooth connection on socket: ' + this.serverSocketId);
+            console.log('Closing bluetooth connection on socket: ' + this._serverSocketId);
 
             networking.bluetooth.stopDiscovery();
 
             networking.bluetooth.onDeviceAdded.removeListener(this.onDeviceAdded);
-            networking.bluetooth.onReceive.removeListener(this.onReceive);
+            networking.bluetooth.onReceive.removeListener(this._onReceive);
             networking.bluetooth.onReceive.removeListener(this.onReceiveConfirmation);
 
-            window.clearTimeout(this.discoveryTimer);
-            window.clearTimeout(this.confirmationTimer);
+            window.clearTimeout(this._discoveryTimer);
+            window.clearTimeout(this._confirmationTimer);
 
-            if (!this.serverSocketId) {
-                this.isConnected = false;
+            if (!this._serverSocketId) {
+                this._isConnected = false;
                 resolve();
             }
 
-            networking.bluetooth.close(this.serverSocketId, () => {
-                this.isConnected = false;
+            networking.bluetooth.close(this._serverSocketId, () => {
+                this._isConnected = false;
                 resolve();
             }, (errorMessage) => {
-                console.log('Failed to disconnect from ' + this.serverSocketId + ': ' + errorMessage);
+                console.log('Failed to disconnect from ' + this._serverSocketId + ': ' + errorMessage);
                 reject();
             });
         });
@@ -81,19 +81,19 @@ export class BluetoothClient {
         console.log('New device found: ');
         console.log(device);
 
-        networking.bluetooth.connect(device.address, this.config.uuid, (serverSocketId) => {
-            console.log('Connected to device using socket: ' + serverSocketId);
+        networking.bluetooth.connect(device.address, this.config.uuid, (_serverSocketId) => {
+            console.log('Connected to device using socket: ' + _serverSocketId);
 
-            this.serverSocketId = serverSocketId;
+            this._serverSocketId = _serverSocketId;
 
             networking.bluetooth.stopDiscovery();
-            window.clearTimeout(this.discoveryTimer);
+            window.clearTimeout(this._discoveryTimer);
 
             networking.bluetooth.onDeviceAdded.removeListener(this.onDeviceAdded);
 
             // Wait to receive some message to confirm that the connection was made on the right socket.
             networking.bluetooth.onReceive.addListener(this.onReceiveConfirmation);
-            this.confirmationTimer = setTimeout(this.onConfirmationTimeout, this.config.confirmationTimeout);
+            this._confirmationTimer = setTimeout(this.onConfirmationTimeout, this.config.confirmationTimeout);
         }, (errorMessage) => {
             console.log('Failed to connect to device: ' + errorMessage);
         });
@@ -106,11 +106,11 @@ export class BluetoothClient {
         if (_.isEqual(receivedMessageView.subarray(0, 8), this.config.confirmationMessageView)) {
             console.log('Server has confirmed connection success!');
             networking.bluetooth.onReceive.removeListener(this.onReceiveConfirmation);
-            window.clearTimeout(this.confirmationTimer);
+            window.clearTimeout(this._confirmationTimer);
 
-            networking.bluetooth.onReceive.addListener(this.onReceive);
-            this.isConnected = true;
-            this.resolveConnect(this.serverSocketId);
+            networking.bluetooth.onReceive.addListener(this._onReceive);
+            this._isConnected = true;
+            this._resolveConnect(this._serverSocketId);
         } else {
             this.cancelConnect('Server connection confirmation message was not of the expected format.');
             console.log('Expected: ');
@@ -133,9 +133,9 @@ export class BluetoothClient {
     private cancelConnect = (reason: string) => {
         console.log(reason);
         this.closeConnection().then(() => {
-            this.rejectConnect(reason);
+            this._rejectConnect(reason);
         }, () => {
-            this.rejectConnect(reason);
+            this._rejectConnect(reason);
         });
     };
 }

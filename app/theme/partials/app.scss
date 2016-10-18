@@ -30,6 +30,24 @@ body,
     border-radius: 20px;
 }
 
+.modal-outer-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(color($colors, dark), 0.7);
+
+}
+
+.modal-inner-container {
+    @include app-background();
+    height: 50%;
+    width: 50%;
+    border-radius: 2vw;
+    border: 0.5vw solid color($colors, dark);
+}
+
 // @mixin column($width) {
 //     -webkit-box-flex: 0;
 //     -webkit-flex: 0 0 $width;

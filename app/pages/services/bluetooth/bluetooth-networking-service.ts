@@ -15,8 +15,8 @@ declare var networking: any;
 @Injectable()
 export class BluetoothNetworkingService {
 
-    private opponentSocketId: string;
-    private successMessage: string = 'Successfully connected!';
+    private _opponentSocketId: string;
+    private _successMessage: string = 'Successfully connected!';
 
     constructor(private bluetoothServer: BluetoothServer, private bluetoothClient: BluetoothClient, private bluetoothConfig: BluetoothConfig) {}
 
@@ -39,8 +39,8 @@ export class BluetoothNetworkingService {
                 console.log('Attempting to connect - attempt ' + i + ' of ' + attempts);
 
                 connect(this.onReceive).then((opponentSocketId) => {
-                    this.opponentSocketId = opponentSocketId;
-                    resolve(this.successMessage);
+                    this._opponentSocketId = opponentSocketId;
+                    resolve(this._successMessage);
                 }, (errorMessage) => {
                     if (i < attempts) {
                         i++;
@@ -62,14 +62,14 @@ export class BluetoothNetworkingService {
     // Close any open server connection to the other device.
     public closeConnectionAsServer = (): Promise < any > => {
         networking.bluetooth.onReceiveError.removeListener(this.onReceiveError);
-        this.opponentSocketId = undefined;
+        this._opponentSocketId = undefined;
         return this.bluetoothServer.closeConnection();
     }
 
     // Close any open client connection to the other device.
     public closeConnectionAsClient = (): Promise < any > => {
         networking.bluetooth.onReceiveError.removeListener(this.onReceiveError);
-        this.opponentSocketId = undefined;
+        this._opponentSocketId = undefined;
         return this.bluetoothClient.closeConnection();
     }
 
@@ -81,7 +81,7 @@ export class BluetoothNetworkingService {
         console.log('Sending data:');
         console.log(stringified);
 
-        networking.bluetooth.send(this.opponentSocketId, buffer, (bytesSent) => {
+        networking.bluetooth.send(this._opponentSocketId, buffer, (bytesSent) => {
             console.log('Sent ' + bytesSent + ' bytes');
         }, (errorMessage) => {
             console.log('Send failed: ' + errorMessage);
@@ -98,8 +98,8 @@ export class BluetoothNetworkingService {
         console.log('Data recieved:');
         console.log(receiveInfo);
 
-        if (receiveInfo.socketId !== this.opponentSocketId) {
-            console.log('Received data is on the wrong socket, should be socket ' + this.opponentSocketId + ', but was socket ' + receiveInfo.socketId);
+        if (receiveInfo.socketId !== this._opponentSocketId) {
+            console.log('Received data is on the wrong socket, should be socket ' + this._opponentSocketId + ', but was socket ' + receiveInfo.socketId);
             return;
         }
 

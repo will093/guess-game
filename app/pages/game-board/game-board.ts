@@ -4,6 +4,8 @@ import { Game } from '../services/game';
 import { OwnPlayer } from '../services/player';
 import { Character } from '../services/character';
 import { MainMenuPage } from '../main-menu/main-menu';
+import { ModalController } from 'ionic-angular';
+import { GameOverModal } from './modals/game-over-modal';
 import * as _ from 'lodash';
 
 @Component({
@@ -17,9 +19,9 @@ export class GameBoardPage {
 
     public ownCharacter: Character;
 
-    constructor(public game: Game, private _ownPlayer: OwnPlayer, private _nav: NavController) {
+    constructor(public game: Game, private _ownPlayer: OwnPlayer, private _nav: NavController, private _modalCtrl: ModalController) {
         this.game.startGame().then(() => {
-            // Separate the characters into 2 rows. TODO: Is there a neater way of doing this?
+
             this.characterGrid = [
                 this.game.characters.slice(0, 5),
                 this.game.characters.slice(5, 10),
@@ -32,6 +34,8 @@ export class GameBoardPage {
             });
             this.gameLoading = false;
         });
+
+        this.game.onGameEnded.subscribe(this.gameEnded);
     }
 
     public characterTapped = (character: Character): void => {
@@ -69,7 +73,19 @@ export class GameBoardPage {
 
     ionViewDidUnload() {
         this.game.resetGameState();
+        this.game.onGameEnded.unsubscribe(this.gameEnded);
         this.returnToMenu();
+    }
+
+    // Callback function which displays a modal when the game ends.
+    private gameEnded = (): void => {
+        let gameOverModal = this._modalCtrl.create(GameOverModal, { gameOverVictory: this.game.gameOverVictory });
+
+        gameOverModal.onDidDismiss(data => {
+            this.returnToMenu();
+        });
+
+        gameOverModal.present();
     }
 }
 

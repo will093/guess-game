@@ -10,21 +10,21 @@ import { BluetoothNetworkingHelper } from '../services/bluetooth-networking-help
 
 export class MainMenuPage {
 
-    roles: typeof PlayerRole = PlayerRole;
+    public roles: typeof PlayerRole = PlayerRole;
 
-    constructor(private nav: NavController, private ownPlayer: OwnPlayer, private opponentPlayer: OpponentPlayer,
-        private networkingHelper: BluetoothNetworkingHelper) {
+    constructor(private _nav: NavController, private _ownPlayer: OwnPlayer, private _opponentPlayer: OpponentPlayer,
+        private _networkingHelper: BluetoothNetworkingHelper) {
     }
 
     // TODO: do this when leaving gameboard.
     ionViewWillEnter(): void {
-        this.networkingHelper.closeConnection();
+        this._networkingHelper.closeConnection();
     }
 
-    startGameTapped(role: PlayerRole): void {
-        this.ownPlayer.role = role;
-        this.opponentPlayer.role = role === PlayerRole.Host ? PlayerRole.Opponent : PlayerRole.Host;
-        this.nav.push(WaitingRoomPage);
+    public startGameTapped(role: PlayerRole): void {
+        this._ownPlayer.role = role;
+        this._opponentPlayer.role = role === PlayerRole.Host ? PlayerRole.Opponent : PlayerRole.Host;
+        this._nav.push(WaitingRoomPage);
     }
 }
 
