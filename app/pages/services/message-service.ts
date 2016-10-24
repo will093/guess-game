@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { IEvent, Event} from './event';
+import { Injectable, NgZone } from '@angular/core';
+import { IEvent, Event } from './event';
 import { BluetoothNetworkingService } from './bluetooth/bluetooth-networking-service';
 import { IMessage, MessageType, StartGameMessage, EndGameMessage } from './message';
 
@@ -7,7 +7,7 @@ import { IMessage, MessageType, StartGameMessage, EndGameMessage } from './messa
 @Injectable()
 export class MessageService {
 
-    public constructor(private _networkingService: BluetoothNetworkingService) {
+    public constructor(private _networkingService: BluetoothNetworkingService, private _zone: NgZone) {
         _networkingService.onDataReceived.subscribe(this.dataReceived);
     }
 
@@ -44,29 +44,32 @@ export class MessageService {
         this._networkingService.send(message);
     }
 
-    public onStartGame: IEvent<StartGameMessage> = new Event<StartGameMessage>();
+    public onStartGame: IEvent < StartGameMessage > = new Event < StartGameMessage > ();
 
-    public onEndTurn: IEvent<void> = new Event<void>();
+    public onEndTurn: IEvent < void > = new Event < void > ();
 
-    public onEndGame: IEvent<EndGameMessage> = new Event<EndGameMessage>();
+    public onEndGame: IEvent < EndGameMessage > = new Event < EndGameMessage > ();
 
     // Fires appropriate events when data is received from the other device.
     private dataReceived = (data): void => {
-
-        switch (data.messageType) {
-            case MessageType.StartGame:
-                this.onStartGame.trigger(data as StartGameMessage);
-                break;
-            case MessageType.EndTurn: 
-                this.onEndTurn.trigger();
-                break;
-            case MessageType.EndGame:
-                this.onEndGame.trigger(data as EndGameMessage);
-                break;
-            default:
-                console.log('Invalid message received:');
-                console.log(data);
-        }
+        // As we have received a message over bluetooth which angular cannot know about, use 
+        // NgZone so that angular can detect changes in application state.
+        this._zone.run(() => {
+            switch (data.messageType) {
+                case MessageType.StartGame:
+                    this.onStartGame.trigger(data as StartGameMessage);
+                    break;
+                case MessageType.EndTurn:
+                    this.onEndTurn.trigger();
+                    break;
+                case MessageType.EndGame:
+                    this.onEndGame.trigger(data as EndGameMessage);
+                    break;
+                default:
+                    console.log('Invalid message received:');
+                    console.log(data);
+            }
+        });
 
     }
 }

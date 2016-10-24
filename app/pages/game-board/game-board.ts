@@ -15,27 +15,14 @@ export class GameBoardPage {
 
     public gameLoading: Boolean = true;
 
-    public characterGrid: Array <Array < Character >>;
+    public characterGrid: Array < Array < Character >> ;
 
     public ownCharacter: Character;
 
     constructor(public game: Game, private _ownPlayer: OwnPlayer, private _nav: NavController, private _modalCtrl: ModalController) {
-        this.game.startGame().then(() => {
-
-            this.characterGrid = [
-                this.game.characters.slice(0, 5),
-                this.game.characters.slice(5, 10),
-                this.game.characters.slice(10, 15),
-                this.game.characters.slice(15, 20),
-            ];
-
-            this.ownCharacter = _.find(this.game.characters, (character: Character) => {
-                return character.characterId === this._ownPlayer.characterId;
-            });
-            this.gameLoading = false;
-        });
-
+        this.game.onGameStarted.subscribe(this.gameStarted);
         this.game.onGameEnded.subscribe(this.gameEnded);
+        this.game.startGame();
     }
 
     public characterTapped = (character: Character): void => {
@@ -60,7 +47,9 @@ export class GameBoardPage {
             return;
         }
 
-        let selectedCharacters = _.filter(this.game.characters, function(character) { return character.isSelected; });
+        let selectedCharacters = _.filter(this.game.characters, function(character) {
+            return character.isSelected;
+        });
 
         if (selectedCharacters.length === 1) {
             this.game.guessCharacter(selectedCharacters[0].characterId);
@@ -74,6 +63,7 @@ export class GameBoardPage {
     ionViewDidUnload() {
         this.game.resetGameState();
         this.game.onGameEnded.unsubscribe(this.gameEnded);
+        this.game.onGameStarted.unsubscribe(this.gameStarted);
         this.returnToMenu();
     }
 
@@ -87,5 +77,18 @@ export class GameBoardPage {
 
         gameOverModal.present();
     }
-}
 
+    private gameStarted = (): void => {
+        this.characterGrid = [
+            this.game.characters.slice(0, 5),
+            this.game.characters.slice(5, 10),
+            this.game.characters.slice(10, 15),
+            this.game.characters.slice(15, 20),
+        ];
+
+        this.ownCharacter = _.find(this.game.characters, (character: Character) => {
+            return character.characterId === this._ownPlayer.characterId;
+        });
+        this.gameLoading = false;
+    }
+}

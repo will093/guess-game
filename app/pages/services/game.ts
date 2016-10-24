@@ -1,4 +1,4 @@
-import { Injectable, ChangeDetectorRef } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Character } from './character';
 import { CharacterGenerator } from './character-generator';
 import { MessageService } from './message-service';
@@ -14,27 +14,18 @@ export class Game {
 
     private _characters: Array < Character > ;
 
-    // A promise which is resolved when the game has been started.
-    private _gameStarted: Promise < void >;
-    private _resolveGameStarted: Function;
-
     private _gameOver: boolean;
 
     private _gameOverVictory: boolean;
 
     constructor(private _characterGenerator: CharacterGenerator, private _ownPlayer: OwnPlayer, 
-        private _opponentPlayer: OpponentPlayer, private _messageService: MessageService, private _changeDetector: ChangeDetectorRef) {
+        private _opponentPlayer: OpponentPlayer, private _messageService: MessageService) {
         console.log('Game constructor executing.');
 
         // Subscribe our callback functions to the appropriate events - subscribe once in constructor, and then never unsubscribe.
         _messageService.onStartGame.subscribe(this.gameStarted);
         _messageService.onEndTurn.subscribe(this.turnEnded);
         _messageService.onEndGame.subscribe(this.characterGuessed);
-
-        // Set up the promise which will be resolved when the game is started.
-        this._gameStarted = new Promise <void> ((resolve, reject) => { 
-            this._resolveGameStarted = resolve; 
-        });
     }
 
 
@@ -42,10 +33,6 @@ export class Game {
     public resetGameState = (): void => {
         this._isOwnTurn = undefined;
         this._characters = undefined;
-        // Set up the promise which will be resolved when the game is started.
-        this._gameStarted = new Promise <void> ((resolve, reject) => { 
-            this._resolveGameStarted = resolve; 
-        });
 
         this._gameOver = undefined;
         this._gameOverVictory = undefined;
@@ -58,11 +45,8 @@ export class Game {
         console.log('Game state was reset, ready for a new game.');
     }
 
-
-    // TODO - tidy this so that there is an ongamestarted event to subscribe to.
-    // Start the game - returns a promise which is resolved instantly for the host who sets up the game, for the opponent
-    // the promise is resolved by the game started event.
-    public startGame = (): Promise < void > => {
+    // Start the game - host sets up the game and sends the initial game data to the opponent.
+    public startGame = (): void => {
         console.log('Starting game...');
 
         // Host sets up game and then sends game data to opponent.
@@ -83,10 +67,8 @@ export class Game {
             this._messageService.startNewGame(ownCharacterId, opponentCharacterId, isOwnTurn);
 
             // Game has now been initialised.
-            this._resolveGameStarted();
+            this.onGameStarted.trigger();
         }
-
-        return this._gameStarted;
     }
 
     // Callback function, invoked when the other device starts a new game.
@@ -98,8 +80,7 @@ export class Game {
         let characters = this._characterGenerator.generateCharacterSet();
         this.setUpGame(message.receiverCharacterId, message.senderCharacterId, message.isReceiverTurn, characters);
 
-        // Game has now been initialised by the Host.
-        this._resolveGameStarted();
+        this.onGameStarted.trigger();
     }
 
     private setUpGame = (ownCharacterId: string, opponentCharacterId: string, isOwnTurn: boolean, characters: Array < Character >): void => {
@@ -131,9 +112,6 @@ export class Game {
         console.log('EndTurnMessage received.');
         this._isOwnTurn = true;
 
-        // Required to propagate changes through to UI.
-        this._changeDetector.detectChanges();
-
         this.onTurnEnded.trigger();
     }
 
@@ -157,9 +135,6 @@ export class Game {
 
         this._gameOver = true;
         this._gameOverVictory = message.receiverWins;
-
-        // Required to propagate changes through to UI.
-        this._changeDetector.detectChanges();
 
         this.onGameEnded.trigger();
     }
