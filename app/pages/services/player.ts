@@ -21,6 +21,10 @@ export class OwnPlayer implements IPlayer {
     public role: PlayerRole;
 
     public characterId: string;
+
+    public isAsking: Boolean;
+
+    public isGuessing: Boolean;
 }
 
 export enum PlayerRole {

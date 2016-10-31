@@ -15,7 +15,7 @@ import { BluetoothNetworkingHelper } from './pages/services/bluetooth-networking
 
 @Component({
     template: '<ion-nav [root]="rootPage"></ion-nav>',
-    providers: [OwnPlayer, OpponentPlayer, Game, MessageService, { provide: BluetoothNetworkingService, useClass: BluetoothNetworkingService }, BluetoothClient, BluetoothServer, BluetoothConfig,
+    providers: [OwnPlayer, OpponentPlayer, Game, MessageService, { provide: BluetoothNetworkingService, useClass: FakeNetworkingService }, BluetoothClient, BluetoothServer, BluetoothConfig,
         CharacterGenerator, BluetoothNetworkingHelper],
 })
 export class MyApp {

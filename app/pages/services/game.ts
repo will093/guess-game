@@ -39,6 +39,7 @@ export class Game {
 
         this._ownPlayer.role = undefined;
         this._ownPlayer.characterId = undefined;
+        this._ownPlayer.isAsking = undefined;
 
         this._opponentPlayer.role = undefined;
         this._opponentPlayer.characterId = undefined;
@@ -95,7 +96,6 @@ export class Game {
         // Eliminate each selected character.
         this._characters.forEach(character => {
             if (character.isSelected) {
-                character.isSelected = false;
                 character.isEliminated = true;
             }
         });

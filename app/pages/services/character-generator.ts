@@ -27,9 +27,9 @@ export class CharacterGenerator {
             { characterId: '16', imagePath: 'build/images/test-set/16.jpg', name: 'Linda', isSelected: false, isEliminated: false },
             { characterId: '17', imagePath: 'build/images/test-set/17.jpg', name: 'Erica', isSelected: false, isEliminated: false },
             { characterId: '18', imagePath: 'build/images/test-set/18.jpg', name: 'Tia', isSelected: false, isEliminated: false },
-            { characterId: '19', imagePath: 'build/images/test-set/19.jpg', name: 'Marcus', isSelected: false, isEliminated: false },
-            { characterId: '20', imagePath: 'build/images/test-set/20.jpg', name: 'Sally', isSelected: false, isEliminated: false },
-            { characterId: '21', imagePath: 'build/images/test-set/21.jpg', name: '?', isSelected: false, isEliminated: false },
+            // { characterId: '19', imagePath: 'build/images/test-set/19.jpg', name: 'Marcus', isSelected: false, isEliminated: false },
+            // { characterId: '20', imagePath: 'build/images/test-set/20.jpg', name: 'Sally', isSelected: false, isEliminated: false },
+            // { characterId: '21', imagePath: 'build/images/test-set/21.jpg', name: '?', isSelected: false, isEliminated: false },
         ];
 
         return _.cloneDeep(characters);

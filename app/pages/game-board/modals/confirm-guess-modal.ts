@@ -4,15 +4,15 @@ import { ViewController } from 'ionic-angular';
 import { MainMenuPage } from '../../main-menu/main-menu';
 
 @Component({
-    templateUrl: 'build/pages/game-board/modals/game-over-modal.html',
+    templateUrl: 'build/pages/game-board/modals/confirm-guess-modal.html',
 })
-export class GameOverModal {
+export class ConfirmGuessModal {
 
-    public gameOverVictory: Boolean;
+    public character: Boolean;
 
     constructor(private _params: NavParams, public viewCtrl: ViewController) {}
 
     ionViewLoaded() {
-        this.gameOverVictory = this._params.get('gameOverVictory');
+        this.character = this._params.get('character');
     }
 }

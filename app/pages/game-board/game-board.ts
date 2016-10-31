@@ -6,6 +6,7 @@ import { Character } from '../services/character';
 import { MainMenuPage } from '../main-menu/main-menu';
 import { ModalController } from 'ionic-angular';
 import { GameOverModal } from './modals/game-over-modal';
+import { ConfirmGuessModal } from './modals/confirm-guess-modal';
 import * as _ from 'lodash';
 
 @Component({
@@ -19,41 +20,70 @@ export class GameBoardPage {
 
     public ownCharacter: Character;
 
-    constructor(public game: Game, private _ownPlayer: OwnPlayer, private _nav: NavController, private _modalCtrl: ModalController) {
+    constructor(public game: Game, public ownPlayer: OwnPlayer, private _nav: NavController, private _modalCtrl: ModalController) {
         this.game.onGameStarted.subscribe(this.gameStarted);
         this.game.onGameEnded.subscribe(this.gameEnded);
         this.game.startGame();
     }
 
     public characterTapped = (character: Character): void => {
-        // Character can only be selected if it is the players turn and the character is not already eliminated.
-        if (!this.game.isOwnTurn || this.game.gameOver || character.isEliminated) {
-            return;
+        if (this.ownPlayer.isAsking && !character.isEliminated 
+            && (character.isSelected || this.moreThanOneUnflipped(_.flatten(this.characterGrid)))) {
+            character.isSelected = !character.isSelected;
         }
-        // Toggle whether the character is selected.
-        character.isSelected = !character.isSelected;
+
+        if (this.ownPlayer.isGuessing && !character.isEliminated) {
+            this.confirmGuess(character);
+            this.ownPlayer.isGuessing = false;
+        }
+    }
+
+    private moreThanOneUnflipped = (characters: Array < Character > ): Boolean => {
+        return characters.filter(character => !character.isSelected && !character.isEliminated).length > 1;
+    }
+
+    private confirmGuess = (character: Character): void => {
+        let confirmGuessModal = this._modalCtrl.create(ConfirmGuessModal, { character: character });
+
+        confirmGuessModal.onDidDismiss(data => {
+            if (data) {
+                this.game.guessCharacter(character.characterId);
+            }
+        });
+
+        confirmGuessModal.present();
+    }
+
+    public askTapped = (): void => {
+        if (this.game.isOwnTurn && !this.game.gameOver) {
+            this.ownPlayer.isAsking = true;
+        }
     }
 
     public endTurn = (): void => {
-        if (!this.game.isOwnTurn || this.game.gameOver) {
-            return;
-        }
-
         this.game.endTurn();
+        this.ownPlayer.isAsking = false;
+        this.deselectAllCharacters();
     }
 
-    public guessSelectedCharacter = (): void => {
-        if (!this.game.isOwnTurn || this.game.gameOver) {
-            return;
-        }
+    public cancelAsk = (): void => {
+        this.ownPlayer.isAsking = false;
+        this.deselectAllCharacters();
+    };
 
-        let selectedCharacters = _.filter(this.game.characters, function(character) {
-            return character.isSelected;
-        });
-
-        if (selectedCharacters.length === 1) {
-            this.game.guessCharacter(selectedCharacters[0].characterId);
+    public guessTapped = (): void => {
+        if (this.game.isOwnTurn && !this.game.gameOver) {
+            this.ownPlayer.isGuessing = true;
         }
+    }
+
+    public cancelGuess = (): void => {
+        this.ownPlayer.isGuessing = false;
+    }
+
+    private deselectAllCharacters = (): void => {
+        var characters = _.flatten(this.characterGrid);
+        _.map(characters, (character: Character) => character.isSelected = false);
     }
 
     public returnToMenu = (): void => {
@@ -80,14 +110,13 @@ export class GameBoardPage {
 
     private gameStarted = (): void => {
         this.characterGrid = [
-            this.game.characters.slice(0, 5),
-            this.game.characters.slice(5, 10),
-            this.game.characters.slice(10, 15),
-            this.game.characters.slice(15, 20),
+            this.game.characters.slice(0, 6),
+            this.game.characters.slice(6, 12),
+            this.game.characters.slice(12, 18),
         ];
 
         this.ownCharacter = _.find(this.game.characters, (character: Character) => {
-            return character.characterId === this._ownPlayer.characterId;
+            return character.characterId === this.ownPlayer.characterId;
         });
         this.gameLoading = false;
     }

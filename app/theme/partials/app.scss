@@ -37,7 +37,6 @@ body,
     justify-content: center;
     align-items: center;
     background-color: rgba(color($colors, dark), 0.7);
-
 }
 
 .modal-inner-container {
@@ -48,10 +47,6 @@ body,
     border: 0.5vw solid color($colors, dark);
 }
 
-// @mixin column($width) {
-//     -webkit-box-flex: 0;
-//     -webkit-flex: 0 0 $width;
-//     -ms-flex: 0 0 percentage($width/100);
-//     flex: 0 0 percentage($width/100);
-//     max-width: percentage($width/100);
-// }
+.hidden {
+    visibility: hidden;
+}
