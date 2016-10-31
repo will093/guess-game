@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavParams } from 'ionic-angular';
 import { ViewController } from 'ionic-angular';
-import { MainMenuPage } from '../../main-menu/main-menu';
 
 @Component({
     templateUrl: 'build/pages/game-board/modals/game-over-modal.html',

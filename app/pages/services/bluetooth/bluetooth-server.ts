@@ -76,12 +76,15 @@ export class BluetoothServer {
                 resolve();
             }
 
-            networking.bluetooth.close(this._serverSocketId, () => {
-                this._isConnected = false;
-                resolve();
-            }, (errorMessage) => {
-                console.log('Failed to unpublish service on socket ' + this._serverSocketId + ': ' + errorMessage);
-                reject();
+            // Disconnect from client socket, and then close server socket.
+            networking.bluetooth.close(this._clientSocketId, () => {
+                networking.bluetooth.close(this._serverSocketId, () => {
+                    this._isConnected = false;
+                    resolve();
+                }, (errorMessage) => {
+                    console.log('Failed to unpublish service on socket ' + this._serverSocketId + ': ' + errorMessage);
+                    reject();
+                });
             });
         });
 
@@ -112,7 +115,7 @@ export class BluetoothServer {
                 this._isConnected = true;
                 this._resolveConnect(this._clientSocketId);
             }, this.config.postConfirmationWaitTimeout);
-               
+
         }, (errorMessage) => {
             this.cancelConnect('Failed to send confirmation message: ' + errorMessage);
         });
@@ -127,4 +130,3 @@ export class BluetoothServer {
         });
     };
 }
-

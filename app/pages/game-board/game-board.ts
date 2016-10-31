@@ -7,6 +7,9 @@ import { MainMenuPage } from '../main-menu/main-menu';
 import { ModalController } from 'ionic-angular';
 import { GameOverModal } from './modals/game-over-modal';
 import { ConfirmGuessModal } from './modals/confirm-guess-modal';
+import { DataErrorModal } from './modals/data-error-modal';
+import { MessageService } from '../services/message-service';
+
 import * as _ from 'lodash';
 
 @Component({
@@ -20,15 +23,21 @@ export class GameBoardPage {
 
     public ownCharacter: Character;
 
-    constructor(public game: Game, public ownPlayer: OwnPlayer, private _nav: NavController, private _modalCtrl: ModalController) {
+    constructor(public game: Game, public ownPlayer: OwnPlayer, private _nav: NavController, private _modalCtrl: ModalController,
+        private _messageService: MessageService) {
+        // Subscribe to game started event in constructor so that we always subscribe before the start game event occurs. 
+        // TODO this is still kind of a race condition, consider taking further action to prevent.
         this.game.onGameStarted.subscribe(this.gameStarted);
+    }
+
+    ionViewLoaded() {
         this.game.onGameEnded.subscribe(this.gameEnded);
+        this._messageService.onDataReceivedError.subscribe(this.dataReceivedError);
         this.game.startGame();
     }
 
     public characterTapped = (character: Character): void => {
-        if (this.ownPlayer.isAsking && !character.isEliminated 
-            && (character.isSelected || this.moreThanOneUnflipped(_.flatten(this.characterGrid)))) {
+        if (this.ownPlayer.isAsking && !character.isEliminated && (character.isSelected || this.moreThanOneUnflipped(_.flatten(this.characterGrid)))) {
             character.isSelected = !character.isSelected;
         }
 
@@ -92,6 +101,7 @@ export class GameBoardPage {
 
     ionViewDidUnload() {
         this.game.resetGameState();
+        this._messageService.onDataReceivedError.unsubscribe(this.dataReceivedError);
         this.game.onGameEnded.unsubscribe(this.gameEnded);
         this.game.onGameStarted.unsubscribe(this.gameStarted);
         this.returnToMenu();
@@ -99,6 +109,8 @@ export class GameBoardPage {
 
     // Callback function which displays a modal when the game ends.
     private gameEnded = (): void => {
+        // Don't show error message if other player disconnects after the game has ended.
+        this._messageService.onDataReceivedError.unsubscribe(this.dataReceivedError);
         let gameOverModal = this._modalCtrl.create(GameOverModal, { gameOverVictory: this.game.gameOverVictory });
 
         gameOverModal.onDidDismiss(data => {
@@ -119,5 +131,15 @@ export class GameBoardPage {
             return character.characterId === this.ownPlayer.characterId;
         });
         this.gameLoading = false;
+    }
+
+    private dataReceivedError = (): void => {
+        let dataErrorModal = this._modalCtrl.create(DataErrorModal);
+
+        dataErrorModal.onDidDismiss(data => {
+            this.returnToMenu();
+        });
+
+        dataErrorModal.present();
     }
 }

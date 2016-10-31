@@ -9,6 +9,7 @@ export class MessageService {
 
     public constructor(private _networkingService: BluetoothNetworkingService, private _zone: NgZone) {
         _networkingService.onDataReceived.subscribe(this.dataReceived);
+        _networkingService.onDataReceivedError.subscribe(this.dataReceivedError);
     }
 
     // Sends a message to the other device to start a new game.
@@ -50,6 +51,8 @@ export class MessageService {
 
     public onEndGame: IEvent < EndGameMessage > = new Event < EndGameMessage > ();
 
+    public onDataReceivedError: IEvent < void > = new Event < void > ();
+
     // Fires appropriate events when data is received from the other device.
     private dataReceived = (data): void => {
         // As we have received a message over bluetooth which angular cannot know about, use 
@@ -70,6 +73,11 @@ export class MessageService {
                     console.log(data);
             }
         });
+    }
 
+    private dataReceivedError = (data): void => {
+        this._zone.run(() => {
+            this.onDataReceivedError.trigger();
+        });
     }
 }
