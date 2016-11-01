@@ -1,0 +1,100 @@
+// http://ionicframework.com/docs/v2/theming/
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+html,
+body,
+.content {
+    height: 100%;
+}
+
+@mixin flex-container($direction,
+$align,
+$justify) {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: $direction;
+    flex-direction: $direction;
+    -webkit-align-items: $align;
+    align-items: $align;
+    -webkit-justify-content: $justify;
+    justify-content: $justify;
+}
+
+@mixin app-background() {
+    background: linear-gradient(-45deg, darken(color($colors, secondary), 10%), lighten(color($colors, secondary), 10%));
+}
+
+.button {
+    font-family: Verdana, sans-serif;
+    border: 1px solid color($colors, dark);
+    border-radius: 12px;
+    color: color($colors, dark);
+}
+
+.button-large {
+    border-radius: 20px;
+}
+
+.modal-outer-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(color($colors, dark), 0.7);
+}
+
+.modal-inner-container {
+    @include app-background();
+    height: 50%;
+    width: 50%;
+    border-radius: 2vw;
+    border: 0.5vw solid color($colors, dark);
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+@mixin character-card-border() {
+    border-radius: 2vw;
+    border: 0.5vw solid color($colors, dark);
+}
+
+// Character card styling.
+.character {
+    overflow: hidden;
+    img {
+        width: 100%;
+        display: block;
+    }
+    p {
+        text-align: center;
+        margin: 0px;
+        padding: 0px;
+        font-size: 1.5vw;
+        line-height: 150%;
+        background-color: color($colors, dark);
+        color: color($colors, secondary);
+        font-family: Verdana, sans-serif;
+    }
+    @include character-card-border();
+}
+
+@font-face {
+    font-family: 'Modak';
+    src: url('../assets/fonts/Modak/Modak-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

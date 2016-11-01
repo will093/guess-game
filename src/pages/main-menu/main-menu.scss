@@ -1,0 +1,21 @@
+main-menu-page {
+    .main-menu {
+        @include flex-container(column,
+        center,
+        center);
+        height: 100%;
+        @include app-background();
+        .main-title {
+            font-size: 15vw;
+            font-family: 'Modak', cursive;
+            text-align: center;
+            color: color($colors, primary);
+            margin: 0px;
+            text-shadow: -1px 0 color($colors, dark), 0 1px color($colors, dark), 1px 0 color($colors, dark), 0 -1px color($colors, dark);
+        }
+        button,
+        .button {
+            margin: 20px;
+        }
+    }
+}

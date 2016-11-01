@@ -1,0 +1,1 @@
+sudo "PATH=$PATH" ionic run android --target=ZY2239DTZL

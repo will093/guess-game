@@ -1,0 +1,16 @@
+waiting-room-page {
+    .waiting-room {
+        height: 100%;
+        @include app-background();
+        @include flex-container(column, center, center);
+        h3 {       
+            color: color($colors, dark);
+            font-family: Verdana, sans-serif;
+        }
+        .button,
+        button {
+            margin-top: 10px
+        }
+    }
+
+}

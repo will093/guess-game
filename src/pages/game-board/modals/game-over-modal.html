@@ -1,0 +1,13 @@
+<div class="modal-outer-container">
+    <div class="modal-inner-container">
+        <div class="game-over-modal">
+            <div *ngIf="gameOverVictory">
+                <p>You win!!!</p>
+            </div>
+            <div *ngIf="!gameOverVictory">
+                <p>You lose...</p>
+            </div>
+            <button ion-button class="button" (click)="viewCtrl.dismiss()">Menu</button>
+        </div>
+    </div>
+</div>
