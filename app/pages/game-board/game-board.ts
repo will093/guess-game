@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
 import { Game } from '../services/game';
 import { OwnPlayer } from '../services/player';
 import { Character } from '../services/character';
@@ -8,6 +8,7 @@ import { ModalController } from 'ionic-angular';
 import { GameOverModal } from './modals/game-over-modal';
 import { ConfirmGuessModal } from './modals/confirm-guess-modal';
 import { DataErrorModal } from './modals/data-error-modal';
+import { ReturnToMenuModal } from './modals/return-to-menu-modal';
 import { MessageService } from '../services/message-service';
 
 import * as _ from 'lodash';
@@ -24,7 +25,7 @@ export class GameBoardPage {
     public ownCharacter: Character;
 
     constructor(public game: Game, public ownPlayer: OwnPlayer, private _nav: NavController, private _modalCtrl: ModalController,
-        private _messageService: MessageService) {
+        private _messageService: MessageService, private _platform: Platform) {
         // Subscribe to game started event in constructor so that we always subscribe before the start game event occurs. 
         // TODO this is still kind of a race condition, consider taking further action to prevent.
         this.game.onGameStarted.subscribe(this.gameStarted);
@@ -93,6 +94,18 @@ export class GameBoardPage {
     private deselectAllCharacters = (): void => {
         var characters = _.flatten(this.characterGrid);
         _.map(characters, (character: Character) => character.isSelected = false);
+    }
+
+    public menuButtonTapped = () => {
+        let returnToMenuModal = this._modalCtrl.create(ReturnToMenuModal);
+
+        returnToMenuModal.onDidDismiss(confirmed => {
+            if (confirmed) {
+                this.returnToMenu();
+            }
+        });
+
+        returnToMenuModal.present();
     }
 
     public returnToMenu = (): void => {

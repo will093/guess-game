@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ViewController } from 'ionic-angular';
 
 @Component({
-    templateUrl: 'build/pages/game-board/modals/data-error-modal.html',
+    templateUrl: 'build/pages/game-board/modals/return-to-menu-modal.html',
 })
-export class DataErrorModal {
+export class ReturnToMenuModal {
 
     constructor(public viewCtrl: ViewController) {}
 }
