@@ -42,6 +42,7 @@ export class BluetoothNetworkingService {
                     this._opponentSocketId = opponentSocketId;
                     resolve(this._successMessage);
                 }, (errorMessage) => {
+                    console.log('Connection attempt' + i + ' of ' + attempts + ' failed.');
                     if (i < attempts) {
                         i++;
                         attemptConnect();

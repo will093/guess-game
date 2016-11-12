@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, Platform } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import { Game } from '../services/game';
 import { OwnPlayer } from '../services/player';
 import { Character } from '../services/character';
@@ -26,7 +26,7 @@ export class GameBoardPage {
     public ownCharacter: Character;
 
     constructor(public game: Game, public ownPlayer: OwnPlayer, private _nav: NavController, private _modalCtrl: ModalController,
-        private _messageService: MessageService, private _platform: Platform) {
+        private _messageService: MessageService) {
         // Subscribe to game started event in constructor so that we always subscribe before the start game event occurs. 
         // TODO this is still kind of a race condition, consider taking further action to prevent.
         this.game.onGameStarted.subscribe(this.gameStarted);
@@ -113,12 +113,12 @@ export class GameBoardPage {
         this._nav.setRoot(MainMenuPage);
     }
 
-    ionViewDidUnload() {
+    ionViewWillUnload() {
         this.game.resetGameState();
+        // Ensure we unsubscribe from all events.
         this._messageService.onDataReceivedError.unsubscribe(this.dataReceivedError);
         this.game.onGameEnded.unsubscribe(this.gameEnded);
         this.game.onGameStarted.unsubscribe(this.gameStarted);
-        this.returnToMenu();
     }
 
     // Callback function which displays a modal when the game ends.

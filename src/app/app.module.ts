@@ -50,7 +50,7 @@ import { BluetoothNetworkingHelper } from '../pages/services/bluetooth-networkin
         OpponentPlayer,
         Game,
         MessageService,
-        { provide: BluetoothNetworkingService, useClass: FakeNetworkingService },
+        { provide: BluetoothNetworkingService, useClass: BluetoothNetworkingService },
         BluetoothClient,
         BluetoothServer,
         BluetoothConfig,

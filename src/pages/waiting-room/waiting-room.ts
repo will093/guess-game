@@ -13,6 +13,8 @@ export class WaitingRoomPage {
 
     public statusMessage: string;
 
+    public connectionFailed: Boolean;
+
     constructor(private _nav: NavController, private _networkingHelper: BluetoothNetworkingHelper) {}
 
     ionViewDidLoad() {
@@ -25,6 +27,7 @@ export class WaitingRoomPage {
         }, (errorMessage) => {
             console.log(errorMessage);
             this.statusMessage = 'Failed to connect';
+            this.connectionFailed = true;
         });
     }
 
