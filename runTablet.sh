@@ -1,1 +1,0 @@
-sudo "PATH=$PATH" ionic run android --target=03501a7866b500000000
