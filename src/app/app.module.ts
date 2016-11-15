@@ -8,6 +8,7 @@ import { ConfirmGuessModal } from '../pages/game-board/modals/confirm-guess-moda
 import { DataErrorModal } from '../pages/game-board/modals/data-error-modal';
 import { GameOverModal } from '../pages/game-board/modals/game-over-modal';
 import { ReturnToMenuModal } from '../pages/game-board/modals/return-to-menu-modal';
+import { Modal } from '../components/modal';
 import { OwnPlayer, OpponentPlayer } from '../pages/services/player';
 import { BluetoothNetworkingService } from '../pages/services/bluetooth/bluetooth-networking-service';
 import { FakeNetworkingService } from '../pages/services/fake-networking-service';
@@ -29,6 +30,7 @@ import { BluetoothNetworkingHelper } from '../pages/services/bluetooth-networkin
         DataErrorModal,
         GameOverModal,
         ReturnToMenuModal,
+        Modal,
     ],
     imports: [
         IonicModule.forRoot(MyApp),
@@ -43,6 +45,7 @@ import { BluetoothNetworkingHelper } from '../pages/services/bluetooth-networkin
         DataErrorModal,
         GameOverModal,
         ReturnToMenuModal,
+        Modal,
     ],
     providers: [
         MyApp,
@@ -50,7 +53,7 @@ import { BluetoothNetworkingHelper } from '../pages/services/bluetooth-networkin
         OpponentPlayer,
         Game,
         MessageService,
-        { provide: BluetoothNetworkingService, useClass: BluetoothNetworkingService },
+        { provide: BluetoothNetworkingService, useClass: FakeNetworkingService },
         BluetoothClient,
         BluetoothServer,
         BluetoothConfig,
