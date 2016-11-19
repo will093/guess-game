@@ -56,8 +56,8 @@ export class GameBoardPage {
     private confirmGuess = (character: Character): void => {
         let confirmGuessModal = this._modalCtrl.create(ConfirmGuessModal, { character: character });
 
-        confirmGuessModal.onDidDismiss(data => {
-            if (data) {
+        confirmGuessModal.onDidDismiss(confirmed => {
+            if (confirmed) {
                 this.game.guessCharacter(character.characterId);
             }
         });
