@@ -1,3 +1,5 @@
+import { Character } from './character';
+
 export interface IMessage {
     messageType: MessageType;
 }
@@ -5,6 +7,9 @@ export interface IMessage {
 export class StartGameMessage implements IMessage {
 
     public messageType: MessageType;
+
+    // Array of ids of characters to be used in this game
+    public characters: Array<Character>;
 
     // Character of player to receive this message.
     public receiverCharacterId: string;

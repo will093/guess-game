@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { BluetoothNetworkingHelper } from '../services/bluetooth-networking-helper';
 import { GameBoardPage } from '../game-board/game-board';
 import { MainMenuPage } from '../main-menu/main-menu';
@@ -15,7 +15,7 @@ export class WaitingRoomPage {
 
     public connectionFailed: Boolean;
 
-    constructor(private _nav: NavController, private _networkingHelper: BluetoothNetworkingHelper) {}
+    constructor(private _nav: NavController, private _networkingHelper: BluetoothNetworkingHelper, private _params: NavParams) {}
 
     ionViewDidLoad() {
         this.statusMessage = 'Connecting...';
@@ -23,7 +23,7 @@ export class WaitingRoomPage {
         this._networkingHelper.connect().then((successMessage) => {
             console.log(successMessage);
             this.statusMessage = 'Succesfully connected!';
-            this._nav.push(GameBoardPage);
+            this._nav.push(GameBoardPage, { characterPack: this._params.get('characterPack')});
         }, (errorMessage) => {
             console.log(errorMessage);
             this.statusMessage = 'Failed to connect';

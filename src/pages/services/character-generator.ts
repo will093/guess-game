@@ -7,8 +7,12 @@ import * as _ from 'lodash';
 @Injectable()
 export class CharacterGenerator {
 
-    public generateCharacterSet = (): Array < Character > => {
-        let characters = [
+    public generateCharacterPack = (setName: string): Array < Character > => {
+        return _.cloneDeep(this.characterPack[setName]);
+    }
+
+    private characterPack = {
+        testPack: [
             { characterId: '1', imagePath: 'assets/img/test-set/1.jpg', name: 'Ling', isSelected: false, isEliminated: false },
             { characterId: '2', imagePath: 'assets/img/test-set/2.jpg', name: 'Sydney', isSelected: false, isEliminated: false },
             { characterId: '3', imagePath: 'assets/img/test-set/3.jpg', name: 'Toby', isSelected: false, isEliminated: false },
@@ -27,12 +31,7 @@ export class CharacterGenerator {
             { characterId: '16', imagePath: 'assets/img/test-set/16.jpg', name: 'Linda', isSelected: false, isEliminated: false },
             { characterId: '17', imagePath: 'assets/img/test-set/17.jpg', name: 'Erica', isSelected: false, isEliminated: false },
             { characterId: '18', imagePath: 'assets/img/test-set/18.jpg', name: 'Tia', isSelected: false, isEliminated: false },
-            // { characterId: '19', imagePath: 'build/images/test-set/19.jpg', name: 'Marcus', isSelected: false, isEliminated: false },
-            // { characterId: '20', imagePath: 'build/images/test-set/20.jpg', name: 'Sally', isSelected: false, isEliminated: false },
-            // { characterId: '21', imagePath: 'build/images/test-set/21.jpg', name: '?', isSelected: false, isEliminated: false },
-        ];
-
-        return _.cloneDeep(characters);
-    }
+        ],
+    };
 }
 

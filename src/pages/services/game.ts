@@ -47,29 +47,24 @@ export class Game {
     }
 
     // Start the game - host sets up the game and sends the initial game data to the opponent.
-    public startGame = (): void => {
+    public startGame = (characterPack: string): void => {
         console.log('Starting game...');
+        let getRandomId = (characters: Array < Character > ): string => {
+            var randomIndex = Math.floor(Math.random() * characters.length);
+            return characters[randomIndex].characterId;
+        };
 
-        // Host sets up game and then sends game data to opponent.
-        if (this._ownPlayer.role === PlayerRole.Host) {
+        let characters = this._characterGenerator.generateCharacterPack(characterPack);
+        let ownCharacterId = getRandomId(characters);
+        let opponentCharacterId = getRandomId(characters);
+        let isOwnTurn = !!Math.floor(Math.random() * 2);
 
-            let getRandomId = (characters: Array < Character > ): string => {
-                var randomIndex = Math.floor(Math.random() * characters.length);
-                return characters[randomIndex].characterId;
-            };
+        this.setUpGame(ownCharacterId, opponentCharacterId, isOwnTurn, characters);           
 
-            let characters = this._characterGenerator.generateCharacterSet();
-            let ownCharacterId = getRandomId(characters);
-            let opponentCharacterId = getRandomId(characters);
-            let isOwnTurn = !!Math.floor(Math.random() * 2);
+        this._messageService.startNewGame(ownCharacterId, opponentCharacterId, isOwnTurn, characters);
 
-            this.setUpGame(ownCharacterId, opponentCharacterId, isOwnTurn, characters);           
-
-            this._messageService.startNewGame(ownCharacterId, opponentCharacterId, isOwnTurn);
-
-            // Game has now been initialised.
-            this.onGameStarted.trigger();
-        }
+        // Game has now been initialised.
+        this.onGameStarted.trigger();
     }
 
     // Callback function, invoked when the other device starts a new game.
@@ -78,8 +73,7 @@ export class Game {
         console.log(message);
 
         // Both host and opponent have the same fixed character set for now, so both can generate the characters locally.
-        let characters = this._characterGenerator.generateCharacterSet();
-        this.setUpGame(message.receiverCharacterId, message.senderCharacterId, message.isReceiverTurn, characters);
+        this.setUpGame(message.receiverCharacterId, message.senderCharacterId, message.isReceiverTurn, message.characters);
 
         this.onGameStarted.trigger();
     }

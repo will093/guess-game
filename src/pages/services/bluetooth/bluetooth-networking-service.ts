@@ -17,6 +17,7 @@ export class BluetoothNetworkingService {
 
     private _opponentSocketId: string;
     private _successMessage: string = 'Successfully connected!';
+    private _partiallyReceivedData: string = '';
 
     constructor(private bluetoothServer: BluetoothServer, private bluetoothClient: BluetoothClient, private bluetoothConfig: BluetoothConfig) {}
 
@@ -98,6 +99,7 @@ export class BluetoothNetworkingService {
     private onReceive = (receiveInfo: any): void => {
         console.log('Data recieved:');
         console.log(receiveInfo);
+        console.log(receiveInfo.data.byteLength);
 
         if (receiveInfo.socketId !== this._opponentSocketId) {
             console.log('Received data is on the wrong socket, should be socket ' + this._opponentSocketId + ', but was socket ' + receiveInfo.socketId);
@@ -106,11 +108,20 @@ export class BluetoothNetworkingService {
 
         let receivedDataEncoded = new Uint8Array(receiveInfo.data);
         let receivedDataJson = new encoding.TextDecoder().decode(receivedDataEncoded);
-        let receivedData = JSON.parse(receivedDataJson);
+        
+        this._partiallyReceivedData += receivedDataJson;
 
-        console.log('Decoded received data:');
-        console.log(receivedData);
-        this.onDataReceived.trigger(receivedData);
+        try {
+            let receivedData = JSON.parse(this._partiallyReceivedData);
+
+            console.log('Decoded received data:');
+            console.log(receivedData);
+            this.onDataReceived.trigger(receivedData);
+            this._partiallyReceivedData = '';
+        } catch (error) {
+            console.log('Incomplete data received:');
+            console.log(this._partiallyReceivedData);
+        }
     }
 
     private onReceiveError = (errorInfo: any): void => {

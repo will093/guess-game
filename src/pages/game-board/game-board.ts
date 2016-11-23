@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { Game } from '../services/game';
-import { OwnPlayer } from '../services/player';
+import { OwnPlayer, PlayerRole } from '../services/player';
 import { Character } from '../services/character';
 import { MainMenuPage } from '../main-menu/main-menu';
 import { ModalController } from 'ionic-angular';
@@ -26,7 +26,7 @@ export class GameBoardPage {
     public ownCharacter: Character;
 
     constructor(public game: Game, public ownPlayer: OwnPlayer, private _nav: NavController, private _modalCtrl: ModalController,
-        private _messageService: MessageService) {
+        private _messageService: MessageService, private _params: NavParams) {
         // Subscribe to game started event in constructor so that we always subscribe before the start game event occurs. 
         // TODO this is still kind of a race condition, consider taking further action to prevent.
         this.game.onGameStarted.subscribe(this.gameStarted);
@@ -35,7 +35,10 @@ export class GameBoardPage {
     ionViewDidLoad() {
         this.game.onGameEnded.subscribe(this.gameEnded);
         this._messageService.onDataReceivedError.subscribe(this.dataReceivedError);
-        this.game.startGame();
+        if (this.ownPlayer.role === PlayerRole.Host) {
+            var characterPack = this._params.get('characterPack');
+            this.game.startGame(characterPack);
+        }
     }
 
     public characterTapped = (character: Character): void => {

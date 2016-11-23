@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { IEvent, Event } from './event';
 import { BluetoothNetworkingService } from './bluetooth/bluetooth-networking-service';
 import { IMessage, MessageType, StartGameMessage, EndGameMessage } from './message';
+import { Character } from './character';
 
 // Service for abstracting the process of sending and receiving game data between the 2 devices over a network.
 @Injectable()
@@ -13,10 +14,11 @@ export class MessageService {
     }
 
     // Sends a message to the other device to start a new game.
-    public startNewGame = (ownCharacterId: string, opponentCharacterId: string, isOwnTurn: boolean): void => {
+    public startNewGame = (ownCharacterId: string, opponentCharacterId: string, isOwnTurn: boolean, characters: Array<Character>): void => {
 
         var message: StartGameMessage = {
             messageType: MessageType.StartGame,
+            characters: characters,
             receiverCharacterId: opponentCharacterId,
             senderCharacterId: ownCharacterId,
             isReceiverTurn: !isOwnTurn,
