@@ -7,7 +7,6 @@ game-board-page {
     }
 
     .game-board-container {
-        positive: relative;
         height: 100%;
     }
 
@@ -20,7 +19,7 @@ game-board-page {
     }
 
     .game-board-characters {
-        max-width: 75%;
+        max-width: 80%;
         display: flex;
         flex-direction: column;
         @include app-background();
@@ -36,8 +35,12 @@ game-board-page {
     }
 
     .game-board-dash {
+        font-size: 10px;
+        .button {
+            font-size: 10px;
+        }
         background: lighten(color($colors, secondary), 5%);
-        max-width: 25%;
+        max-width: 20%;
         display: flex;
         flex-direction: column;
         align-items: space-between;
@@ -67,7 +70,7 @@ game-board-page {
             flex-grow: 1;
             flex-basis: 0;
             .character {
-                width: 50%;
+                width: 67%;
             }
         }
         .actions-row {
