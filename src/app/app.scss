@@ -32,7 +32,7 @@ $justify) {
 }
 
 @mixin app-background() {
-    background: linear-gradient(-45deg, darken(color($colors, secondary), 10%), lighten(color($colors, secondary), 10%));
+    background: color($colors, secondary);
 }
 
 .button {
