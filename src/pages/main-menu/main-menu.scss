@@ -4,7 +4,10 @@ main-menu-page {
         center,
         center);
         height: 100%;
-        @include app-background();
+        background: url('assets/img/test-pack/1.jpg') no-repeat center top fixed;
+        background-size: 100%; 
+        -webkit-background-size: 100%;
+        -moz-background-size: 100%;
         .main-title {
             font-size: 15vw;
             font-family: 'Modak', cursive;
@@ -15,7 +18,10 @@ main-menu-page {
         }
         button,
         .button {
-            margin: 20px;
+            margin: 10px;
+        }
+        .space-above {
+            margin-top: 20%;
         }
     }
 }
