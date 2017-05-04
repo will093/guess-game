@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Character } from './character';
 import { CharacterGenerator } from './character-generator';
 import { MessageService } from './message-service';
-import { OpponentPlayer, OwnPlayer, PlayerRole } from './player';
+import { OpponentPlayer, OwnPlayer } from './player';
 import { StartGameMessage, EndGameMessage } from './message';
 import { IEvent, Event} from './event';
 

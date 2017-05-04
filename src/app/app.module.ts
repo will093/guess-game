@@ -1,6 +1,8 @@
-import { NgModule } from '@angular/core';
-import { IonicApp, IonicModule } from 'ionic-angular';
+import { NgModule, ErrorHandler } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
+
 import { Modal } from '../components/modal';
 import { MainMenuPage } from '../pages/main-menu/main-menu';
 import { CharacterPackModal } from '../pages/main-menu/modals/character-pack-modal';
@@ -21,47 +23,53 @@ import { Game } from '../pages/services/game';
 import { MessageService } from '../pages/services/message-service';
 import { BluetoothNetworkingHelper } from '../pages/services/bluetooth-networking-helper';
 
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
+
 @NgModule({
-    declarations: [
-        MyApp,
-        MainMenuPage,
-        CharacterPackModal,
-        WaitingRoomPage,
-        GameBoardPage,
-        ConfirmGuessModal,
-        DataErrorModal,
-        GameOverModal,
-        ReturnToMenuModal,
-        Modal,
-    ],
-    imports: [
-        IonicModule.forRoot(MyApp),
-    ],
-    bootstrap: [IonicApp],
-    entryComponents: [
-        MyApp,
-        MainMenuPage,
-        CharacterPackModal,
-        WaitingRoomPage,
-        GameBoardPage,
-        ConfirmGuessModal,
-        DataErrorModal,
-        GameOverModal,
-        ReturnToMenuModal,
-        Modal,
-    ],
-    providers: [
-        MyApp,
-        OwnPlayer,
-        OpponentPlayer,
-        Game,
-        MessageService,
-        { provide: BluetoothNetworkingService, useClass: BluetoothNetworkingService },
-        BluetoothClient,
-        BluetoothServer,
-        BluetoothConfig,
-        CharacterGenerator,
-        BluetoothNetworkingHelper,
-    ],
+  declarations: [
+    MyApp,
+    MainMenuPage,
+    CharacterPackModal,
+    WaitingRoomPage,
+    GameBoardPage,
+    ConfirmGuessModal,
+    DataErrorModal,
+    GameOverModal,
+    ReturnToMenuModal,
+    Modal,
+  ],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(MyApp)
+  ],
+  bootstrap: [IonicApp],
+  entryComponents: [
+    MyApp,
+    MainMenuPage,
+    CharacterPackModal,
+    WaitingRoomPage,
+    GameBoardPage,
+    ConfirmGuessModal,
+    DataErrorModal,
+    GameOverModal,
+    ReturnToMenuModal,
+    Modal,
+  ],
+  providers: [
+    StatusBar,
+    SplashScreen,
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+    OwnPlayer,
+    OpponentPlayer,
+    Game,
+    MessageService,
+    { provide: BluetoothNetworkingService, useClass: FakeNetworkingService },
+    BluetoothClient,
+    BluetoothServer,
+    BluetoothConfig,
+    CharacterGenerator,
+    BluetoothNetworkingHelper,
+  ]
 })
-export class AppModule {}
+export class AppModule { }

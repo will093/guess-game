@@ -37,3 +37,4 @@ runNewPhone.sh
 runPhone.sh
 runTablet.sh
 modulepaths.json
+.editorconfig

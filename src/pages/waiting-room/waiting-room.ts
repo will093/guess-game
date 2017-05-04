@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { BluetoothNetworkingHelper } from '../services/bluetooth-networking-helper';
 import { GameBoardPage } from '../game-board/game-board';
-import { MainMenuPage } from '../main-menu/main-menu';
 
 @Component({
     selector: 'waiting-room-page',
