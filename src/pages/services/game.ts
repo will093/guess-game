@@ -54,7 +54,7 @@ export class Game {
             return characters[randomIndex].characterId;
         };
 
-        let characters = this._characterGenerator.generateCharacterPack(characterPack);
+        let characters = this._characterGenerator.generateCharacterPack(characterPack).characterSet;
         let ownCharacterId = getRandomId(characters);
         let opponentCharacterId = getRandomId(characters);
         let isOwnTurn = !!Math.floor(Math.random() * 2);
