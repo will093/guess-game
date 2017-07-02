@@ -1,4 +1,6 @@
 <div class="waiting-room">
-    <h3>{{statusMessage}}</h3>
-    <button ion-button *ngIf="connectionFailed" class="button" (click)="returnToMenu()">Return to menu</button>
+    <a *ngIf="!loading" class="back-arrow" (click)="onBackArrowPressed()"><i class="fa fa-arrow-left fa-2x"></i></a>
+    <div class="waiting-room-content">
+        <h3>{{statusMessage}} <i *ngIf="loading" class="fa fa-spinner fa-spin"></i></h3>
+    </div>
 </div>

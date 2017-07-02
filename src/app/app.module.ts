@@ -11,7 +11,6 @@ import { DataErrorModal } from '../pages/game-board/modals/data-error-modal';
 import { GameOverModal } from '../pages/game-board/modals/game-over-modal';
 import { ReturnToMenuModal } from '../pages/game-board/modals/return-to-menu-modal';
 import { MainMenuPage } from '../pages/main-menu/main-menu';
-import { CharacterPackModal } from '../pages/main-menu/modals/character-pack-modal';
 import { BluetoothNetworkingHelper } from '../pages/services/bluetooth-networking-helper';
 import { BluetoothClient } from '../pages/services/bluetooth/bluetooth-client';
 import { BluetoothConfig } from '../pages/services/bluetooth/bluetooth-config';
@@ -30,7 +29,6 @@ import { ChoosePackPage } from '../pages/choose-pack/choose-pack';
   declarations: [
     MyApp,
     MainMenuPage,
-    CharacterPackModal,
     WaitingRoomPage,
     GameBoardPage,
     ConfirmGuessModal,
@@ -48,7 +46,6 @@ import { ChoosePackPage } from '../pages/choose-pack/choose-pack';
   entryComponents: [
     MyApp,
     MainMenuPage,
-    CharacterPackModal,
     WaitingRoomPage,
     GameBoardPage,
     ConfirmGuessModal,

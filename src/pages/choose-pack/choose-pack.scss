@@ -37,6 +37,6 @@ choose-pack-page {
         padding-top: 13px;
         padding-left: 13px;
         color: color($colors, dark);
-        position: fixed;
+        position: fixed !important;
     }
 }

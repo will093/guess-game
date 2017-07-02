@@ -1,16 +1,28 @@
 waiting-room-page {
     .waiting-room {
+        @include app-background;
         height: 100%;
-        @include app-background();
-        @include flex-container(column, center, center);
-        h3 {       
-            color: color($colors, dark);
-            font-family: Verdana, sans-serif;
-        }
-        .button,
-        button {
-            margin-top: 10px
-        }
     }
 
+    .waiting-room-content {
+        @include flex-container(column, center, center);
+        height: 100%;
+    }
+
+    h3 {
+        color: color($colors, dark);
+        font-family: Bubblegum, serif;
+    }
+
+    .button,
+    button {
+        margin-top: 10px;
+    }
+
+    .back-arrow {
+        padding-top: 13px;
+        padding-left: 13px;
+        color: color($colors, dark);
+        position: fixed;
+    }
 }
