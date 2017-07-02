@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, ModalController } from 'ionic-angular';
-import { WaitingRoomPage } from '../waiting-room/waiting-room';
-import { OwnPlayer, OpponentPlayer, PlayerRole } from '../services/player';
+import { ModalController, NavController } from 'ionic-angular';
+
+import { ChoosePackPage } from '../choose-pack/choose-pack';
 import { BluetoothNetworkingHelper } from '../services/bluetooth-networking-helper';
-import { CharacterPackModal } from './modals/character-pack-modal';
+import { OpponentPlayer, OwnPlayer, PlayerRole } from '../services/player';
+import { WaitingRoomPage } from '../waiting-room/waiting-room';
 
 @Component({
     selector: 'main-menu-page',
@@ -24,15 +25,7 @@ export class MainMenuPage {
         this._ownPlayer.role = PlayerRole.Host;
         this._opponentPlayer.role = PlayerRole.Opponent;
 
-        let characterPackModal = this._modalCtrl.create(CharacterPackModal);
-
-        characterPackModal.onDidDismiss(characterPack => {
-            if (characterPack) {
-                this._nav.push(WaitingRoomPage, { characterPack: characterPack });
-            }
-        });
-
-        characterPackModal.present();
+        this._nav.push(ChoosePackPage);
     }
 
     public joinGameTapped(): void {

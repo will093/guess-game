@@ -1,0 +1,42 @@
+choose-pack-page {
+    .choose-pack {
+        height: 100%;
+        @include app-background();
+    }
+
+    .packs-container {
+        @include flex-container(row, center, center);
+    }
+
+    .packs-container-outer {
+        // h1 (line height * font-size) + padding
+        margin-top: -53.2px;
+        height: 100%;
+        @include flex-container(column, center, center);
+    }
+
+    h1 {
+        text-align: center;
+        top: 0;
+        left: 0;
+        padding-top: 10px;
+        margin: 0px;
+        font-family: 'Modak', cursive;
+        font-size: 36px;
+        line-height: 1.2;
+        color: color($colors, dark);
+    }
+
+    .pack {
+        width: 20vw;
+        margin: 2vw;
+        display: block;
+    }
+
+    .back-arrow {
+        padding-top: 13px;
+        padding-left: 13px;
+        color: color($colors, dark);
+        position: fixed;
+    }
+}

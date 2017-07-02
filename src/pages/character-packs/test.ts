@@ -1,7 +1,7 @@
 import { CharacterPack } from '../services/character-pack';
 
 export const testPack: CharacterPack = {
-    name: 'test',
+    name: 'Standard',
     coverImageUrl: 'assets/img/test-pack/1.jpg',
     characterSet: [
         { characterId: '1', imagePath: 'assets/img/test-pack/1.jpg', name: 'Ling', isSelected: false, isEliminated: false },

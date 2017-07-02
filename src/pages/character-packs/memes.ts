@@ -1,7 +1,7 @@
 import { CharacterPack } from '../services/character-pack';
 
 export const memesPack: CharacterPack = {
-    name: 'memes',
+    name: 'Memes',
     coverImageUrl: 'assets/img/memes-pack/advice-dog.jpg',
     characterSet: [
         { characterId: '19', imagePath: 'assets/img/memes-pack/advice-dog.jpg', name: '?', isSelected: false, isEliminated: false },

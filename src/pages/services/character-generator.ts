@@ -13,9 +13,14 @@ export class CharacterGenerator {
         return _.cloneDeep(this.characterPack[setName]);
     }
 
+    public getAllCharacterPacks = (): CharacterPack[] => {
+        return _.map(this.characterPack);
+    }
+
+    // dictionary of names and packs.
     private characterPack: { [id: string]: CharacterPack } = {
-        testPack: testPack,
-        memesPack: memesPack
+        'Standard': testPack,
+        'Memes': memesPack
     };
 }
 

@@ -34,7 +34,8 @@ $justify) {
 }
 
 @mixin app-background() {
-    background: color($colors, secondary);
+    background: url('../assets/img/background.png') no-repeat center top;
+    background-size: 100% auto; 
 }
 
 .button {
@@ -79,7 +80,7 @@ $justify) {
         text-align: center;
         margin: 0px;
         padding: 0px;
-        font-size: 1.5vw;
+        font-size: 1.8vw;
         line-height: 150%;
         background-color: color($colors, dark);
         color: color($colors, secondary);
