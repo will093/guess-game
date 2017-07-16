@@ -20,11 +20,6 @@ export class MyApp {
       setTimeout(() => {
         splashScreen.hide();
       }, 1000);
-
-      // Disablehardware back button.
-      platform.registerBackButtonAction(() => {
-        return;
-      }, 100);
     });
   }
 }

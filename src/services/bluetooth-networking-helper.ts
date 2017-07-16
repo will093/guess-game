@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OwnPlayer, PlayerRole } from './player';
+import { OwnPlayer, PlayerRole } from '../models/player';
 import { BluetoothNetworkingService } from './bluetooth/bluetooth-networking-service';
 
 // Service for abstracting the process of networking from the game's business logic.

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavParams } from 'ionic-angular';
 import { ViewController } from 'ionic-angular';
-import { Character } from '../../services/character';
+import { Character } from '../../../models/character';
 
 @Component({
     selector: 'confirm-guess-modal',

@@ -1,4 +1,4 @@
-import { CharacterPack } from '../services/character-pack';
+import { CharacterPack } from '../../models/character-pack';
 
 export const memesPack: CharacterPack = {
     name: 'Memes',

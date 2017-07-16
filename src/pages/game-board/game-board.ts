@@ -1,17 +1,18 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, Platform } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
-import * as _ from 'lodash';
+import { find, flatten, map } from 'lodash';
 
+import { Character } from '../../models/character';
+import { OwnPlayer, PlayerRole } from '../../models/player';
+import { Game } from '../../services/game';
+import { MessageService } from '../../services/message-service';
 import { MainMenuPage } from '../main-menu/main-menu';
-import { Character } from '../services/character';
-import { Game } from '../services/game';
-import { MessageService } from '../services/message-service';
-import { OwnPlayer, PlayerRole } from '../services/player';
 import { ConfirmGuessModal } from './modals/confirm-guess-modal';
 import { DataErrorModal } from './modals/data-error-modal';
 import { GameOverModal } from './modals/game-over-modal';
 import { ReturnToMenuModal } from './modals/return-to-menu-modal';
+
 
 @Component({
     selector: 'game-board-page',
@@ -35,9 +36,7 @@ export class GameBoardPage {
     }
 
     ionViewDidLoad() {
-        this.unRegisterBackButtonAction = this._platform.registerBackButtonAction(() => {
-            this.backButtonTapped();
-        }, 200);
+        this.setBackButtonActionToShowModal();
 
         this.game.onGameEnded.subscribe(this.gameEnded);
         this._messageService.onDataReceivedError.subscribe(this.dataReceivedError);
@@ -47,8 +46,14 @@ export class GameBoardPage {
         }
     }
 
+    private setBackButtonActionToShowModal() {
+        this.unRegisterBackButtonAction = this._platform.registerBackButtonAction(() => {
+            this.backButtonTapped();
+        }, 200);
+    }
+
     public characterTapped = (character: Character): void => {
-        if (this.game.isOwnTurn && !character.isEliminated && (character.isSelected || this.moreThanOneUnflipped(_.flatten(this.characterGrid)))) {
+        if (this.game.isOwnTurn && !character.isEliminated && (character.isSelected || this.moreThanOneUnflipped(flatten(this.characterGrid)))) {
             character.isSelected = !character.isSelected;
         }
     }
@@ -83,8 +88,14 @@ export class GameBoardPage {
         returnToMenuModal.onDidDismiss(confirmed => {
             if (confirmed) {
                 this.returnToMenu();
+            } else {
+                this.unRegisterBackButtonAction();
+                this.setBackButtonActionToShowModal();
             }
         });
+
+        this.unRegisterBackButtonAction();
+        this.unRegisterBackButtonAction = this._platform.registerBackButtonAction(() => {}, 200);
 
         returnToMenuModal.present();
     }
@@ -103,8 +114,8 @@ export class GameBoardPage {
     }
 
     private deselectAllCharacters = (): void => {
-        var characters = _.flatten(this.characterGrid);
-        _.map(characters, (character: Character) => character.isSelected = false);
+        var characters = flatten(this.characterGrid);
+        map(characters, (character: Character) => character.isSelected = false);
     }
 
     private moreThanOneUnflipped = (characters: Array<Character>): Boolean => {
@@ -131,7 +142,7 @@ export class GameBoardPage {
             this.game.characters.slice(12, 18),
         ];
 
-        this.ownCharacter = _.find(this.game.characters, (character: Character) => {
+        this.ownCharacter = find(this.game.characters, (character: Character) => {
             return character.characterId === this.ownPlayer.characterId;
         });
         this.gameLoading = false;

@@ -3,7 +3,7 @@ import { BluetoothServer } from './bluetooth-server';
 import { BluetoothClient } from './bluetooth-client';
 import { BluetoothConfig } from './bluetooth-config';
 import * as encoding from 'text-encoding';
-import { IEvent, Event } from '../event';
+import { IEvent, Event } from '../../models/event';
 
 declare var networking: any;
 

@@ -1,29 +1,30 @@
-import { ErrorHandler, NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-
 import { Modal } from '../components/modal';
-import { ChoosePackPage } from '../pages/choose-pack/choose-pack';
+import { MyApp } from './app.component';
+import { MainMenuPage } from '../pages/main-menu/main-menu';
+import { WaitingRoomPage } from '../pages/waiting-room/waiting-room';
 import { GameBoardPage } from '../pages/game-board/game-board';
 import { ConfirmGuessModal } from '../pages/game-board/modals/confirm-guess-modal';
 import { DataErrorModal } from '../pages/game-board/modals/data-error-modal';
 import { GameOverModal } from '../pages/game-board/modals/game-over-modal';
 import { ReturnToMenuModal } from '../pages/game-board/modals/return-to-menu-modal';
-import { MainMenuPage } from '../pages/main-menu/main-menu';
-import { BluetoothNetworkingHelper } from '../pages/services/bluetooth-networking-helper';
-import { BluetoothClient } from '../pages/services/bluetooth/bluetooth-client';
-import { BluetoothConfig } from '../pages/services/bluetooth/bluetooth-config';
-import { BluetoothNetworkingService } from '../pages/services/bluetooth/bluetooth-networking-service';
-import { BluetoothServer } from '../pages/services/bluetooth/bluetooth-server';
-import { CharacterGenerator } from '../pages/services/character-generator';
-import { FakeNetworkingService } from '../pages/services/fake-networking-service';
-import { Game } from '../pages/services/game';
-import { MessageService } from '../pages/services/message-service';
-import { OpponentPlayer, OwnPlayer } from '../pages/services/player';
-import { WaitingRoomPage } from '../pages/waiting-room/waiting-room';
-import { MyApp } from './app.component';
+import { ChoosePackPage } from '../pages/choose-pack/choose-pack';
+import { OpponentPlayer, OwnPlayer } from '../models/player';
+import { Game } from '../services/game';
+import { MessageService } from '../services/message-service';
+import { BluetoothNetworkingService } from '../services/bluetooth/bluetooth-networking-service';
+import { FakeNetworkingService } from '../services/fake-networking-service';
+import { BluetoothClient } from '../services/bluetooth/bluetooth-client';
+import { BluetoothServer } from '../services/bluetooth/bluetooth-server';
+import { BluetoothConfig } from '../services/bluetooth/bluetooth-config';
+import { CharacterGenerator } from '../services/character-generator';
+import { BluetoothNetworkingHelper } from '../services/bluetooth-networking-helper';
+import { ErrorHandler, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppMinimize } from '@ionic-native/app-minimize';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+
 
 @NgModule({
   declarations: [
@@ -63,12 +64,13 @@ import { MyApp } from './app.component';
     OpponentPlayer,
     Game,
     MessageService,
-    { provide: BluetoothNetworkingService, useClass: FakeNetworkingService },
+    { provide: BluetoothNetworkingService, useClass: BluetoothNetworkingService },
     BluetoothClient,
     BluetoothServer,
     BluetoothConfig,
     CharacterGenerator,
     BluetoothNetworkingHelper,
+    AppMinimize
   ]
 })
 export class AppModule { }

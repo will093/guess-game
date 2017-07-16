@@ -10,7 +10,6 @@ choose-pack-page {
     }
 
     .packs-container-outer {
-        // h1 (line height * font-size) + padding
         margin-top: -$header-height;
         height: 100%;
 
@@ -23,7 +22,7 @@ choose-pack-page {
         left: 0;
         padding-top: 7px;
         margin: 0px;
-        font-family: 'Modak', cursive;
+        font-family: Bubblegum;
         font-size: 30px;
         line-height: 1.2;
         color: color($colors, dark);

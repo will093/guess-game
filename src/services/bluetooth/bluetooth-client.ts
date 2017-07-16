@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BluetoothConfig } from './bluetooth-config';
-import * as _ from 'lodash';
+import { isEqual } from 'lodash';
 
 declare var networking: any;
 
@@ -103,7 +103,7 @@ export class BluetoothClient {
         let receivedMessageView = new Uint8Array(receiveInfo.data);
 
         // Compare first 8 bytes as we seem to be getting other stuff through too.
-        if (_.isEqual(receivedMessageView.subarray(0, 8), this.config.confirmationMessageView)) {
+        if (isEqual(receivedMessageView.subarray(0, 8), this.config.confirmationMessageView)) {
             console.log('Server has confirmed connection success!');
             networking.bluetooth.onReceive.removeListener(this.onReceiveConfirmation);
             window.clearTimeout(this._confirmationTimer);

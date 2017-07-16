@@ -11,14 +11,6 @@ game-board-page {
         padding: 0px;
     }
 
-    .game-board-overlay {
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        z-index: 10;
-        background-color: rgba(color($colors, dark), 0.7);
-    }
-
     .game-board-characters {
         max-width: 82.5%;
         display: flex;
@@ -28,11 +20,6 @@ game-board-page {
         ion-col {
             padding: 2px;
         }
-    }
-
-    .characters-controls {
-        display: flex;
-        justify-content: center;
     }
 
     .game-board-dash {
@@ -104,29 +91,9 @@ game-board-page {
         }
     }
 
-    // Code for character glow.
-    .glow {
-        animation-duration: 1250ms;
-        animation-name: glow;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
-    }
-
-    @keyframes glow {
-        0% {
-            border-color: lighten(color($colors, dark), 0%);
-            box-shadow: 0 0 5px lighten(color($colors, dark), 0%), inset 0 0 5px lighten(color($colors, dark), 0%), 0 2px 0 #000;
-        }
-
-        100% {
-            border-color:lighten(color($colors, dark), 15%);
-            box-shadow: 0 0 20px lighten(color($colors, dark), 15%), inset 0 0 10px lighten(color($colors, dark), 15%), 0 2px 0 #000;
-        }
-    }
-
     // Fade eliminated characters when asking.
     .game-board-character-eliminated {
-        opacity: 0.80;
+        opacity: 0.75;
     }
 
     // Code for character card flip animation.
@@ -175,7 +142,7 @@ game-board-page {
             justify-content: center;
             height: 100%;
             margin: 0px;
-            font-family: 'Modak', cursive;
+            font-family: Bubblegum;
             color: color($colors, dark);
         }
     }

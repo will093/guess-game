@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { CharacterGenerator } from '../services/character-generator';
-import { CharacterPack } from '../services/character-pack';
+
+import { CharacterPack } from '../../models/character-pack';
+import { CharacterGenerator } from '../../services/character-generator';
 import { WaitingRoomPage } from '../waiting-room/waiting-room';
 
 @Component({
@@ -19,11 +20,7 @@ export class ChoosePackPage {
         this.characterPacks = this._characterGenerator.getAllCharacterPacks();
     }
 
-    onPackSelected(pack) {
+    packSelected(pack) {
         this._nav.push(WaitingRoomPage, { characterPack: pack.name });
-    }
-
-    onBackArrowPressed() {
-        this._nav.pop();
     }
 }

@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Character } from './character';
+import { Character } from '../models/character';
+import { Event, IEvent } from '../models/event';
+import { EndGameMessage, StartGameMessage } from '../models/message';
+import { OpponentPlayer, OwnPlayer } from '../models/player';
 import { CharacterGenerator } from './character-generator';
 import { MessageService } from './message-service';
-import { OpponentPlayer, OwnPlayer } from './player';
-import { StartGameMessage, EndGameMessage } from './message';
-import { IEvent, Event} from './event';
+
+import { Injectable } from '@angular/core';
+
+
 
 // Model for the game itself.
 @Injectable()
@@ -39,7 +42,6 @@ export class Game {
 
         this._ownPlayer.role = undefined;
         this._ownPlayer.characterId = undefined;
-        this._ownPlayer.isAsking = undefined;
 
         this._opponentPlayer.role = undefined;
         this._opponentPlayer.characterId = undefined;

@@ -19,37 +19,18 @@ body,
     height: 100%;
 }
 
-.load-images {
-    display: none;
-}
-
-@mixin flex-container($direction, $align, $justify) {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-direction: $direction;
-    flex-direction: $direction;
-    -webkit-align-items: $align;
-    align-items: $align;
-    -webkit-justify-content: $justify;
-    justify-content: $justify;
-}
-
 @mixin app-background {
     background: url("../assets/img/background.png") no-repeat center top;
     background-size: 100% auto;
 }
 
+// ----------------------------- Buttons -----------------------------
 .button {
     font-family: Bubblegum;
     font-size: 2vw;
     border: 1.5px solid color($colors, dark);
     background-image: linear-gradient(color($colors, primary), color($colors, primary), color($colors, primary), lighten(color($colors, primary), 20%));
     color: color($colors, dark);
-
-    // .button-inner {
-    //     display: block;
-    //     margin: 5px;
-    // }
 }
 
 .button:after {
@@ -66,16 +47,13 @@ body,
     border-radius: 10px;
 }
 
-.hidden {
-    visibility: hidden;
-}
+// --------------------- Character cards -------------------------
 
 @mixin character-card-border {
     border-radius: 2vw;
     border: 0.5vw solid color($colors, dark);
 }
 
-// Character card styling.
 .character {
     overflow: hidden;
 
@@ -102,19 +80,28 @@ body,
     min-height: $header-height;
 }
 
-.back-arrow {
-    padding-top: 8px;
-    padding-left: 8px;
-    color: color($colors, dark);
-    position: fixed;
+// ------------------- Helpers -------------------------
+
+.hidden {
+    visibility: hidden;
 }
 
-@font-face {
-    font-family: 'Modak';
-    src: url("../assets/fonts/Modak/Modak-Regular.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
+.load-images {
+    display: none;
 }
+
+@mixin flex-container($direction, $align, $justify) {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: $direction;
+    flex-direction: $direction;
+    -webkit-align-items: $align;
+    align-items: $align;
+    -webkit-justify-content: $justify;
+    justify-content: $justify;
+}
+
+// -------------------- Fonts --------------------------
 
 @font-face {
     font-family: 'Bubblegum';

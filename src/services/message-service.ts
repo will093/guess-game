@@ -1,8 +1,9 @@
 import { Injectable, NgZone } from '@angular/core';
-import { IEvent, Event } from './event';
+
+import { Character } from '../models/character';
+import { Event, IEvent } from '../models/event';
+import { EndGameMessage, IMessage, MessageType, StartGameMessage } from '../models/message';
 import { BluetoothNetworkingService } from './bluetooth/bluetooth-networking-service';
-import { IMessage, MessageType, StartGameMessage, EndGameMessage } from './message';
-import { Character } from './character';
 
 // Service for abstracting the process of sending and receiving game data between the 2 devices over a network.
 @Injectable()

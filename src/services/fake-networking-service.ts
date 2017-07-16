@@ -1,8 +1,10 @@
-
 import { Injectable } from '@angular/core';
-import { IEvent, Event } from './event';
 
-// Fake networking service for running app in browser.
+import { Event, IEvent } from '../models/event';
+
+
+
+// Fake networking service for running app in browser, used only in development.
 @Injectable()
 export class FakeNetworkingService {
 
