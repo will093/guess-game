@@ -1,6 +1,5 @@
 // http://ionicframework.com/docs/v2/theming/
 
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -20,9 +19,11 @@ body,
     height: 100%;
 }
 
-@mixin flex-container($direction,
-$align,
-$justify) {
+.load-images {
+    display: none;
+}
+
+@mixin flex-container($direction, $align, $justify) {
     display: -webkit-flex;
     display: flex;
     -webkit-flex-direction: $direction;
@@ -33,27 +34,32 @@ $justify) {
     justify-content: $justify;
 }
 
-@mixin app-background() {
-    background: url('../assets/img/background.png') no-repeat center top;
-    background-size: 100% auto; 
+@mixin app-background {
+    background: url("../assets/img/background.png") no-repeat center top;
+    background-size: 100% auto;
 }
 
 .button {
     font-family: Bubblegum;
+    font-size: 2vw;
     border: 1.5px solid color($colors, dark);
-    border-radius: 12px;
     background-image: linear-gradient(color($colors, primary), color($colors, primary), color($colors, primary), lighten(color($colors, primary), 20%));
     color: color($colors, dark);
+
+    // .button-inner {
+    //     display: block;
+    //     margin: 5px;
+    // }
 }
 
-.button:after{
-	content: '';
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: calc(100%);
-	height: 50%;
-	background: linear-gradient(rgba(lighten(color($colors, primary), 25%), 0.8), rgba(lighten(color($colors, primary), 25%), 0.2));
+.button:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: calc(100%);
+    height: 50%;
+    background: linear-gradient(rgba(lighten(color($colors, primary), 25%), 0.8), rgba(lighten(color($colors, primary), 25%), 0.2));
 }
 
 .button-large {
@@ -64,7 +70,7 @@ $justify) {
     visibility: hidden;
 }
 
-@mixin character-card-border() {
+@mixin character-card-border {
     border-radius: 2vw;
     border: 0.5vw solid color($colors, dark);
 }
@@ -72,10 +78,12 @@ $justify) {
 // Character card styling.
 .character {
     overflow: hidden;
+
     img {
         width: 100%;
         display: block;
     }
+
     p {
         text-align: center;
         margin: 0px;
@@ -86,19 +94,31 @@ $justify) {
         color: color($colors, secondary);
         font-family: Verdana, sans-serif;
     }
-    @include character-card-border();
+
+    @include character-card-border;
+}
+
+.header {
+    min-height: $header-height;
+}
+
+.back-arrow {
+    padding-top: 8px;
+    padding-left: 8px;
+    color: color($colors, dark);
+    position: fixed;
 }
 
 @font-face {
     font-family: 'Modak';
-    src: url('../assets/fonts/Modak/Modak-Regular.ttf') format('truetype');
+    src: url("../assets/fonts/Modak/Modak-Regular.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Bubblegum';
-    src: url('../assets/fonts/Modak/Bubblegum.ttf') format('truetype');
+    src: url("../assets/fonts/Modak/Bubblegum.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }

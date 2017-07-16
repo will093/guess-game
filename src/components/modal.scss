@@ -7,11 +7,19 @@ modal {
         align-items: center;
         background-color: rgba(color($colors, dark), 0.7);
     }
+
     .modal-inner-container {
-        @include app-background();
-        height: 50%;
-        width: 50%;
+        background: linear-gradient(90deg, darken(color($colors, secondary), 7.5%), lighten(color($colors, secondary), 7.5%));
+        height: 60%;
+        width: 60%;
         border-radius: 2vw;
         border: 0.5vw solid color($colors, dark);
     }
+}
+
+.modal-wrapper {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
 }

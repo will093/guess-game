@@ -16,7 +16,10 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.hide();
-      splashScreen.hide();
+
+      setTimeout(() => {
+        splashScreen.hide();
+      }, 1000);
 
       // Disablehardware back button.
       platform.registerBackButtonAction(() => {

@@ -1,6 +1,8 @@
 <div class="choose-pack">
-    <a class="back-arrow" (click)="onBackArrowPressed()"><i class="fa fa-arrow-left fa-2x"></i></a>
-    <h1>Choose Game Type</h1>
+    <div class="header">
+        <a class="back-arrow" (click)="onBackArrowPressed()"><i class="fa fa-arrow-left fa-2x"></i></a>
+        <h1>Choose Game Type</h1>
+    </div>
     <div class="packs-container-outer">
         <div class="packs-container">
             <div *ngFor="let pack of characterPacks">

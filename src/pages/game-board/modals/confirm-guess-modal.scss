@@ -5,8 +5,17 @@ confirm-guess-modal {
         align-items: center;
         display: flex;
         flex-direction: column;
+
+        h3 {
+            font-family: Bubblegum;
+            font-size: 3vw;
+            color: color($colors, dark);
+            margin: 0;
+        }
     }
+
     .confirm-guess-character {
-        width: 25%;
+        width: 22%;
+        margin: 7.5px;
     }
 }

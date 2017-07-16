@@ -5,6 +5,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { Modal } from '../components/modal';
+import { ChoosePackPage } from '../pages/choose-pack/choose-pack';
 import { GameBoardPage } from '../pages/game-board/game-board';
 import { ConfirmGuessModal } from '../pages/game-board/modals/confirm-guess-modal';
 import { DataErrorModal } from '../pages/game-board/modals/data-error-modal';
@@ -23,7 +24,6 @@ import { MessageService } from '../pages/services/message-service';
 import { OpponentPlayer, OwnPlayer } from '../pages/services/player';
 import { WaitingRoomPage } from '../pages/waiting-room/waiting-room';
 import { MyApp } from './app.component';
-import { ChoosePackPage } from '../pages/choose-pack/choose-pack';
 
 @NgModule({
   declarations: [

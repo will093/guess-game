@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import { ModalController, NavController } from 'ionic-angular';
 
 import { ChoosePackPage } from '../choose-pack/choose-pack';
@@ -14,7 +15,7 @@ import { WaitingRoomPage } from '../waiting-room/waiting-room';
 export class MainMenuPage {
 
     constructor(private _nav: NavController, private _ownPlayer: OwnPlayer, private _opponentPlayer: OpponentPlayer,
-        private _networkingHelper: BluetoothNetworkingHelper, private _modalCtrl: ModalController) {}
+        private _networkingHelper: BluetoothNetworkingHelper, private _modalCtrl: ModalController) { }
 
     // TODO: do this when leaving gameboard.
     ionViewWillEnter(): void {
@@ -24,13 +25,12 @@ export class MainMenuPage {
     public hostGameTapped(): void {
         this._ownPlayer.role = PlayerRole.Host;
         this._opponentPlayer.role = PlayerRole.Opponent;
-
         this._nav.push(ChoosePackPage);
     }
 
     public joinGameTapped(): void {
-        this._ownPlayer.role = PlayerRole.Opponent;
-        this._opponentPlayer.role = PlayerRole.Host;
-        this._nav.push(WaitingRoomPage);
-    }
+    this._ownPlayer.role = PlayerRole.Opponent;
+    this._opponentPlayer.role = PlayerRole.Host;
+    this._nav.push(WaitingRoomPage);
+}
 }

@@ -1,11 +1,9 @@
 <modal>
     <div class="return-to-menu-modal">
+        <h3>Return to menu?</h3>
         <div>
-            <p>Return to menu?</p>
-        </div>
-        <div>
-            <button ion-button class="button" (click)="viewCtrl.dismiss(true)">Confirm</button>
-            <button ion-button class="button" (click)="viewCtrl.dismiss(false)">Cancel</button>
+            <button ion-button class="button button-large" (click)="viewCtrl.dismiss(true)">Okay</button>
+            <button ion-button class="button button-large" (click)="viewCtrl.dismiss(false)">Cancel</button>
         </div>
     </div>
 </modal>
