@@ -85,6 +85,8 @@ export class BluetoothServer {
                     console.log('Failed to unpublish service on socket ' + this._serverSocketId + ': ' + errorMessage);
                     reject();
                 });
+            }, () => {
+                reject();
             });
         });
 
