@@ -4,12 +4,10 @@
     </div>
     <div class="packs-container-outer">
         <div class="packs-container">
-            <div *ngFor="let pack of characterPacks">
-                <a class="character pack" (click)="packSelected(pack)">
-                    <img src={{pack.coverImageUrl}}>
-                    <p>{{pack.name}}</p>
-                </a>
-            </div>
+            <a *ngFor="let pack of characterPacks" class="character pack" (click)="packSelected(pack)">
+                <img src={{pack.coverImageUrl}}>
+                <p>{{pack.name}}</p>
+            </a>
         </div>
     </div>
 </div>

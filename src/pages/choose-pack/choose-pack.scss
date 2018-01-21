@@ -20,10 +20,10 @@ choose-pack-page {
         text-align: center;
         top: 0;
         left: 0;
-        padding-top: 7px;
+        padding-top: 10px;
         margin: 0px;
         font-family: Bubblegum;
-        font-size: 30px;
+        font-size: 8vh;
         line-height: 1.2;
         color: color($colors, dark);
     }
@@ -31,6 +31,6 @@ choose-pack-page {
     .pack {
         width: 20vw;
         margin: 2vw;
-        display: block;
+        display: inline-block;
     }
 }

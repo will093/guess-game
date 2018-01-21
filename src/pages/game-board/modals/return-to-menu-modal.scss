@@ -5,11 +5,5 @@ return-to-menu-modal {
         align-items: center;
         display: flex;
         flex-direction: column;
-
-        h3 {
-            font-family: Bubblegum;
-            font-size: 3vw;
-            color: color($colors, dark);
-        }
     }
 }

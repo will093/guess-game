@@ -12,8 +12,16 @@ modal {
         background: linear-gradient(90deg, darken(color($colors, secondary), 7.5%), lighten(color($colors, secondary), 7.5%));
         height: 60%;
         width: 60%;
-        border-radius: 2vw;
-        border: 0.5vw solid color($colors, dark);
+        border-radius: 20px;
+        border: 2px solid color($colors, dark);
+    }
+
+    h3 {
+        font-family: Bubblegum;
+        font-size: 2.75vw;
+        width: 100%;
+        text-align: center;
+        color: color($colors, dark);
     }
 }
 

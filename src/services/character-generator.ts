@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep, map } from 'lodash';
 
-import { memesPack } from '../values/character-packs/memes';
-import { testPack } from '../values/character-packs/test';
 import { CharacterPack } from '../models/character-pack';
+import { animalsPack } from '../values/character-packs/animals';
+import { standardPack } from '../values/character-packs/standard';
 
 // Service for generating character sets.
 @Injectable()
@@ -19,8 +19,8 @@ export class CharacterGenerator {
 
     // dictionary of names and packs.
     private characterPack: { [id: string]: CharacterPack } = {
-        'Standard': testPack,
-        'Memes': memesPack
+        'Standard': standardPack,
+        'Animals': animalsPack
     };
 }
 

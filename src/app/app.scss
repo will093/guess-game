@@ -28,7 +28,7 @@ body,
 .button {
     font-family: Bubblegum;
     font-size: 2vw;
-    border: 1.5px solid color($colors, dark);
+    border: 2px solid color($colors, dark);
     background-image: linear-gradient(color($colors, primary), color($colors, primary), color($colors, primary), lighten(color($colors, primary), 20%));
     color: color($colors, dark);
 }
@@ -50,8 +50,8 @@ body,
 // --------------------- Character cards -------------------------
 
 @mixin character-card-border {
-    border-radius: 2vw;
-    border: 0.5vw solid color($colors, dark);
+    border-radius: 20px;
+    border: 2px solid color($colors, dark);
 }
 
 .character {
